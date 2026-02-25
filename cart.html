@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Cart — Bot & Bolt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .cart-page {
+            padding: calc(var(--nav-height) + 48px) 0 80px;
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        .cart-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .cart-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        .cart-count-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        /* Cart items */
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .cart-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(147, 125, 186, 0.1);
+            padding: 20px 24px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cart-item:hover {
+            border-color: rgba(147, 125, 186, 0.25);
+            box-shadow: var(--shadow-md);
+        }
+
+        .cart-item-img {
+            width: 72px;
+            height: 72px;
+            border-radius: var(--radius-sm);
+            background: var(--gradient-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            flex-shrink: 0;
+        }
+
+        .cart-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cart-item-cat {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--secondary);
+            margin-bottom: 4px;
+        }
+
+        .cart-item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cart-item-model {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .cart-item-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .cart-item-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cart-qty-ctrl {
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(147, 125, 186, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        .cqb {
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .cqb:hover {
+            background: var(--gradient-soft);
+            color: var(--primary);
+        }
+
+        .cqv {
+            width: 36px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .cart-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            padding: 4px;
+            border-radius: 6px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-remove:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        /* Empty state */
+        .cart-empty {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(147, 125, 186, 0.1);
+        }
+
+        .cart-empty-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .cart-empty h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .cart-empty p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* Order summary */
+        .order-summary {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(147, 125, 186, 0.1);
+            padding: 28px;
+            position: sticky;
+            top: calc(var(--nav-height) + 20px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .summary-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(147, 125, 186, 0.08);
+            font-size: 0.9rem;
+        }
+
+        .summary-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .summary-row span:first-child {
+            color: var(--text-muted);
+        }
+
+        .summary-row span:last-child {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            margin-top: 8px;
+            border-top: 2px solid rgba(147, 125, 186, 0.15);
+        }
+
+        .summary-total span:first-child {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .summary-total-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .promo-row {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .promo-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1.5px solid rgba(147, 125, 186, 0.2);
+            border-radius: var(--radius-sm);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+            background: var(--bg);
+            color: var(--text-primary);
+        }
+
+        .promo-input:focus {
+            border-color: var(--secondary);
+        }
+
+        .promo-btn {
+            padding: 10px 16px;
+            background: var(--gradient-soft);
+            border: 1px solid rgba(147, 125, 186, 0.2);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .promo-btn:hover {
+            background: var(--gradient-main);
+            color: white;
+            border-color: transparent;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--gradient-main);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(62, 109, 180, 0.35);
+        }
+
+        .secure-badge {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Promo badge */
+        .promo-ok {
+            display: none;
+            font-size: 0.8rem;
+            color: #22c55e;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        @media(max-width:768px) {
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: static;
+            }
+
+            .cart-item {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-particles" id="bgParticles"></div>
+    <!-- Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="logo.png" alt="Bot &amp; Bolt" style="height:56px;width:auto;object-fit:contain;" />
+            </a>
+            <nav class="nav-links">
+                <a href="shop.html" class="nav-link nav-cta-secondary">Shop Parts</a>
+                <a href="index.html#home" class="nav-link nav-cta">Fix &amp; Analyze</a>
+                <a href="login.html" class="nav-btn-outline">Sign In</a>
+                <a href="cart.html" class="nav-cart" aria-label="Cart" style="border-color:var(--primary)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.98-1.72L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </a>
+            </nav>
+            <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="shop.html" class="mobile-link">Shop Parts</a>
+        <a href="index.html#home" class="mobile-link mobile-link-primary">Fix &amp; Analyze</a>
+        <a href="login.html" class="mobile-link">Sign In</a>
+    </div>
+
+    <div class="cart-page">
+        <div class="cart-container">
+            <h1 class="cart-heading" data-aos="fade-up">🛒 Your Cart</h1>
+            <p class="cart-count-label" id="cartCountLabel" data-aos="fade-up">Loading...</p>
+
+            <div class="cart-layout">
+                <!-- Items column -->
+                <div>
+                    <div class="cart-items" id="cartItemsCol"></div>
+                    <div
+                        style="margin-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+                        <a href="shop.html" class="btn-secondary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M19 12H5M12 5l-7 7 7 7" />
+                            </svg>
+                            Continue Shopping
+                        </a>
+                        <button onclick="clearCart()"
+                            style="background:none;border:none;cursor:pointer;font-size:0.85rem;color:var(--text-light);font-family:'Outfit',sans-serif;transition:color .2s"
+                            onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='var(--text-light)'">
+                            Clear Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary sidebar -->
+                <div class="order-summary" data-aos="fade-left">
+                    <h3 class="summary-title">Order Summary</h3>
+                    <div class="summary-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+                    <div class="summary-row"><span>Delivery</span><span id="delivery">Free</span></div>
+                    <div class="summary-row"><span>Tax (8%)</span><span id="tax">$0.00</span></div>
+                    <div id="promoDiscount" class="summary-row" style="display:none;color:#22c55e"><span>Promo
+                            Discount</span><span id="discountVal" style="color:#22c55e">-$0.00</span></div>
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span class="summary-total-price" id="total">$0.00</span>
+                    </div>
+
+                    <!-- Promo code -->
+                    <div class="promo-ok" id="promoOk">✓ Promo code applied! 10% OFF</div>
+                    <div class="promo-row">
+                        <input type="text" class="promo-input" id="promoInput" placeholder="Promo code (try SAVE10)" />
+                        <button class="promo-btn" onclick="applyPromo()">Apply</button>
+                    </div>
+
+                    <button class="checkout-btn" onclick="checkout()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                        Proceed to Checkout
+                    </button>
+                    <div class="secure-badge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0110 0v4" />
+                        </svg>
+                        Secure checkout · SSL encrypted
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+    <script>
+        let cartData = JSON.parse(localStorage.getItem('bnb_cart') || '[]');
+        let promoApplied = false;
+
+        function parsePrice(s) { return parseFloat((s || '').toString().replace('$', '')) || 0; }
+
+        function persistCart() {
+            localStorage.setItem('bnb_cart', JSON.stringify(cartData));
+        }
+
+        function renderCart() {
+            const col = document.getElementById('cartItemsCol');
+            const badge = document.getElementById('cartCount');
+            const label = document.getElementById('cartCountLabel');
+            const totalQty = cartData.reduce((s, i) => s + i.qty, 0);
+
+            if (badge) badge.textContent = totalQty;
+
+            // Empty state
+            if (!cartData.length) {
+                label.textContent = 'Your cart is empty';
+                col.innerHTML = `
+                  <div class="cart-empty">
+                    <div class="cart-empty-icon">🛒</div>
+                    <h3>Your cart is empty</h3>
+                    <p>Looks like you haven't added any parts yet.</p>
+                    <a href="shop.html" class="btn-primary" style="display:inline-flex;margin-top:8px">Browse Parts →</a>
+                  </div>`;
+                updateSummary();
+                return;
+            }
+
+            label.textContent = totalQty + ' item' + (totalQty !== 1 ? 's' : '') + ' in your cart';
+
+            // NOTE: NO data-aos here — AOS only initialises once on page load,
+            // so dynamically re-injected elements would be stuck at opacity:0.
+            col.innerHTML = cartData.map((item, idx) => `
+              <div class="cart-item">
+                <div class="cart-item-img">${item.icon}</div>
+                <div class="cart-item-info">
+                  <div class="cart-item-cat">${item.cat}</div>
+                  <a href="product-detail.html?id=${item.id}" class="cart-item-name">${item.name}</a>
+                  <div class="cart-item-model">Model: ${item.model}</div>
+                </div>
+                <div class="cart-item-right">
+                  <div class="cart-qty-ctrl">
+                    <button class="cqb" onclick="updateQty(${idx},-1)">−</button>
+                    <span class="cqv">${item.qty}</span>
+                    <button class="cqb" onclick="updateQty(${idx},1)">+</button>
+                  </div>
+                  <div class="cart-item-price">$${(parsePrice(item.price) * item.qty).toFixed(2)}</div>
+                  <button class="cart-remove" onclick="removeItem(${idx})" title="Remove">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+                  </button>
+                </div>
+              </div>
+            `).join('');
+
+            updateSummary();
+        }
+
+        function updateQty(idx, delta) {
+            if (!cartData[idx]) return;
+            cartData[idx].qty = Math.max(1, cartData[idx].qty + delta);
+            persistCart();
+            renderCart();
+        }
+
+        function removeItem(idx) {
+            cartData.splice(idx, 1);
+            persistCart();
+            renderCart();
+        }
+
+        function clearCart() {
+            // Insert confirmation right after the "Clear Cart" button
+            const clearBtn = document.querySelector('button[onclick="clearCart()"]');
+            if (document.getElementById('clearConfirm')) return; // already open
+            const target = clearBtn ? clearBtn.parentElement : document.getElementById('cartItemsCol');
+            const insertMethod = clearBtn ? 'afterend' : 'afterbegin';
+            target.insertAdjacentHTML(insertMethod, `
+              <div id="clearConfirm" style="background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px 16px;margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <span style="font-size:0.88rem;font-weight:600;color:#856404">Remove all items from cart?</span>
+                <div style="display:flex;gap:8px">
+                  <button onclick="confirmClear()" style="padding:7px 16px;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:0.85rem">Yes, clear</button>
+                  <button onclick="document.getElementById('clearConfirm').remove()" style="padding:7px 16px;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:0.85rem">Cancel</button>
+                </div>
+              </div>`);
+        }
+
+        function confirmClear() {
+            cartData = [];
+            persistCart();
+            renderCart();
+        }
+
+        function updateSummary() {
+            const subtotal = cartData.reduce((s, i) => s + parsePrice(i.price) * i.qty, 0);
+            const tax = subtotal * 0.08;
+            const discount = promoApplied ? subtotal * 0.1 : 0;
+            const total = subtotal + tax - discount;
+            document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
+            document.getElementById('tax').textContent = '$' + tax.toFixed(2);
+            document.getElementById('total').textContent = '$' + total.toFixed(2);
+            if (discount > 0) {
+                document.getElementById('promoDiscount').style.display = 'flex';
+                document.getElementById('discountVal').textContent = '-$' + discount.toFixed(2);
+            }
+        }
+
+        function applyPromo() {
+            const code = document.getElementById('promoInput').value.trim().toUpperCase();
+            if (code === 'SAVE10') {
+                promoApplied = true;
+                document.getElementById('promoOk').style.display = 'block';
+                document.getElementById('promoInput').disabled = true;
+                updateSummary();
+            } else {
+                document.getElementById('promoInput').style.borderColor = '#ef4444';
+                document.getElementById('promoInput').placeholder = 'Invalid code — try SAVE10';
+                setTimeout(() => {
+                    document.getElementById('promoInput').style.borderColor = '';
+                    document.getElementById('promoInput').placeholder = 'Promo code (try SAVE10)';
+                }, 2500);
+            }
+        }
+
+        function checkout() {
+            if (!cartData.length) { alert('Your cart is empty!'); return; }
+            window.location.href = 'checkout.html';
+        }
+
+        renderCart();
+
+    </script>
+</body>
+
+</html>

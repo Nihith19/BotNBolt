@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us — Bot & Bolt | Our Story & Mission</title>
+    <meta name="description"
+        content="Bot & Bolt was born from frustration — and a hole in the wall. Learn our story, our mission to end throw-away culture, and the team making repair accessible to everyone." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* About-page specific styles */
+        .about-hero {
+            padding: calc(var(--nav-height) + 80px) 0 80px;
+            background: var(--gradient-hero);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(147, 125, 186, 0.1), transparent 70%);
+            top: -150px;
+            right: -100px;
+        }
+
+        .about-hero-inner {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-hero-inner .section-label {
+            margin-bottom: 16px;
+        }
+
+        .about-hero-inner .section-title {
+            margin-bottom: 20px;
+        }
+
+        .about-hero-inner .section-sub {
+            margin: 0 auto;
+        }
+
+        /* Mission columns */
+        .mission-section {
+            background: white;
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .mission-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+        }
+
+        .mission-text p {
+            font-size: 0.97rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .mission-visual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .mission-stat-card {
+            background: var(--bg);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            border: 1px solid rgba(147, 125, 186, 0.12);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .mission-stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .mission-stat-card .stat-big {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .mission-stat-card p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Story section */
+        .story-section {
+            background: var(--bg);
+        }
+
+        .story-content {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .story-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 3vw, 2.8rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            letter-spacing: -0.03em;
+        }
+
+        .story-content .story-lead {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .story-content p {
+            font-size: 0.97rem;
+            color: var(--text-muted);
+            line-height: 1.85;
+            margin-bottom: 18px;
+        }
+
+        .story-blockquote {
+            border-left: 3px solid transparent;
+            border-image: var(--gradient-main) 1;
+            padding: 16px 28px;
+            margin: 32px 0;
+            background: var(--gradient-soft);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+
+        .story-blockquote p {
+            font-family: 'DM Sans', sans-serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Values */
+        .values-section {
+            background: white;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .value-card {
+            padding: 36px 28px;
+            background: var(--bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(147, 125, 186, 0.1);
+            transition: var(--transition);
+        }
+
+        .value-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(147, 125, 186, 0.25);
+        }
+
+        .value-emoji {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .value-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .value-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+
+        /* Problem / Solution */
+        .ps-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .ps-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 40px 36px;
+            border: 1px solid rgba(147, 125, 186, 0.12);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .ps-card.solution {
+            background: var(--gradient-soft);
+            border-color: rgba(62, 109, 180, 0.2);
+        }
+
+        .ps-card-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: var(--radius-pill);
+        }
+
+        .ps-card .problem-label {
+            color: #dc6b19;
+            background: rgba(220, 107, 25, 0.08);
+        }
+
+        .ps-card .solution-label {
+            color: var(--primary);
+            background: rgba(62, 109, 180, 0.1);
+        }
+
+        .ps-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+        }
+
+        .ps-card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.75;
+        }
+
+        @media (max-width: 768px) {
+            .mission-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mission-visual {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <!-- Navigation -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="logo.png" alt="Bot &amp; Bolt" style="height:56px;width:auto;object-fit:contain;" />
+            </a>
+            <nav class="nav-links">
+                <a href="shop.html" class="nav-link nav-cta-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                    Shop Parts
+                </a>
+                <a href="index.html#home" class="nav-link nav-cta">Fix &amp; Analyze</a>
+                <a href="login.html" class="nav-btn-outline">Sign In</a>
+                <a href="cart.html" class="nav-cart" aria-label="Cart">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.98-1.72L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </a>
+            </nav>
+            <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="shop.html" class="mobile-link">Shop Parts</a>
+        <a href="index.html#home" class="mobile-link mobile-link-primary">Fix &amp; Analyze</a>
+        <a href="login.html" class="mobile-link">Sign In</a>
+    </div>
+
+    <!-- About Hero -->
+    <section class="about-hero">
+        <div class="about-hero-inner">
+            <span class="section-label" data-aos="fade-up">OUR STORY</span>
+            <h1 class="section-title" data-aos="fade-up" data-aos-delay="100">
+                We're on a Mission to End<br />
+                the <span class="text-gradient">Throw-Away Culture</span>
+            </h1>
+            <p class="section-sub" data-aos="fade-up" data-aos-delay="200">
+                Every year, millions of tons of repairable items end up in landfills simply because the repair process
+                is too intimidating. At Bot &amp; Bolt, we're changing that by making repair accessible to everyone.
+            </p>
+        </div>
+    </section>
+
+    <!-- Mission -->
+    <section class="mission-section">
+        <div class="section-container">
+            <div class="mission-grid">
+                <div class="mission-text" data-aos="fade-up">
+                    <span class="section-label">WHY WE EXIST</span>
+                    <h2>Repair Shouldn't Be This Hard</h2>
+                    <p>Repairing items today is often frustrating, expensive, and time-consuming. From identifying
+                        obscure parts to finding reliable instructions, the barriers are too high. The result? Perfectly
+                        fixable items get thrown away every day.</p>
+                    <p>We combine industry-leading AI with a comprehensive parts database to provide instant diagnosis
+                        and actionable repair guides. <strong>One photo is all it takes</strong> to start your repair
+                        journey.</p>
+                    <a href="index.html" class="btn-primary" style="margin-top:16px">Start Repairing — Free</a>
+                </div>
+                <div class="mission-visual" data-aos="fade-left" data-aos-delay="150">
+                    <div class="mission-stat-card">
+                        <span class="stat-big">50K+</span>
+                        <p>Repairs successfully guided to completion</p>
+                    </div>
+                    <div class="mission-stat-card">
+                        <span class="stat-big">98%</span>
+                        <p>Accuracy rate on AI diagnoses</p>
+                    </div>
+                    <div class="mission-stat-card">
+                        <span class="stat-big">3.5h</span>
+                        <p>Average time saved per repair</p>
+                    </div>
+                    <div class="mission-stat-card">
+                        <span class="stat-big">$300</span>
+                        <p>Average contractor cost saved per job</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem vs Solution -->
+    <section style="background: var(--bg);">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="section-label">THE CHALLENGE</span>
+                <h2 class="section-title">The Problem. <span class="text-gradient">Our Solution.</span></h2>
+            </div>
+            <div class="ps-grid">
+                <div class="ps-card" data-aos="fade-right">
+                    <div class="ps-card-label problem-label">The Problem</div>
+                    <h3>Repair is Too Intimidating</h3>
+                    <p>Today, fixing a broken item means navigating conflicting YouTube tutorials, making multiple store
+                        trips buying wrong parts, spending hours on research you don't have — and still calling a $300
+                        contractor at the end of it all.</p>
+                    <p style="margin-top:14px">The barriers are high, the knowledge gap is real, and most people just
+                        give up and buy new.</p>
+                </div>
+                <div class="ps-card solution" data-aos="fade-left">
+                    <div class="ps-card-label solution-label">The Solution</div>
+                    <h3>AI That Thinks Like an Expert</h3>
+                    <p>We combine industry-leading AI vision models with a comprehensive parts database to deliver
+                        instant, professional-grade diagnosis in seconds. Upload a photo, get a tailored repair guide,
+                        order the exact right parts — and fix it yourself.</p>
+                    <p style="margin-top:14px">No expertise needed. No wasted trips. No wrong purchases. Just results.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="story-section">
+        <div class="section-container">
+            <div class="story-content">
+                <span class="section-label" data-aos="fade-up">THE ORIGIN</span>
+                <h2 data-aos="fade-up" data-aos-delay="50">Our Story</h2>
+                <p class="story-lead" data-aos="fade-up" data-aos-delay="100">Bot-N-Bolt was born from frustration — and
+                    a hole in the wall.</p>
+                <p data-aos="fade-up" data-aos-delay="150">When our toddler pulled down a bathroom tissue holder, we
+                    faced a choice: pay a contractor $300 for a 20-minute patch job, or figure it out ourselves.</p>
+                <p data-aos="fade-up" data-aos-delay="200">We chose DIY. What followed was weeks of YouTube videos with
+                    conflicting advice and trips to Home Depot that never had all the parts we needed. With a 5-year-old
+                    and a 10-month-old at home, that small hole became a constant reminder on our to-do list — for over
+                    a year.</p>
+                <div class="story-blockquote" data-aos="fade-up" data-aos-delay="250">
+                    <p>As AI engineers, we kept asking: <em>"Why isn't there a smarter solution?"</em></p>
+                </div>
+                <p data-aos="fade-up" data-aos-delay="300">So we built one. Bot-N-Bolt started as a tool to solve our
+                    own problem: instant, accurate repair guidance for busy families who don't have time to become
+                    YouTube experts.</p>
+                <p data-aos="fade-up" data-aos-delay="350">Today, we're on a mission to help millions of families in the
+                    same boat — saving them time, money, and the frustration of broken things that stay broken.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values -->
+    <section class="values-section">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="section-label">WHAT WE STAND FOR</span>
+                <h2 class="section-title">Built on <span class="text-gradient">Core Values</span></h2>
+            </div>
+            <div class="values-grid">
+                <div class="value-card" data-aos="fade-up">
+                    <span class="value-emoji">🛠️</span>
+                    <h3>Empowerment</h3>
+                    <p>We believe everyone has the ability to fix things — they just need the right tools and guidance.
+                        We put professional-grade knowledge in the hands of everyday people.</p>
+                </div>
+                <div class="value-card" data-aos="fade-up" data-aos-delay="100">
+                    <span class="value-emoji">♻️</span>
+                    <h3>Sustainability</h3>
+                    <p>Every repair completed is a step away from landfill. We're deeply committed to building a world
+                        where "fix it" comes before "replace it" — for the planet and your wallet.</p>
+                </div>
+                <div class="value-card" data-aos="fade-up" data-aos-delay="200">
+                    <span class="value-emoji">💰</span>
+                    <h3>Cost-Efficiency</h3>
+                    <p>We believe you should never pay $300 for a 20-minute job. Our platform gives you the knowledge to
+                        do it yourself, spend only on the right parts, and keep more money in your pocket.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="section-container">
+            <div class="cta-card" data-aos="fade-up">
+                <div class="cta-glow"></div>
+                <span class="section-label">JOIN US</span>
+                <h2>Ready to Fix Anything?</h2>
+                <p>Join thousands of families saving time, money, and the planet — one repair at a time.</p>
+                <div class="cta-actions">
+                    <a href="index.html" class="btn-primary">Try Fix &amp; Analyze —
+                        Free</a>
+                    <a href="shop.html" class="btn-ghost">Shop Parts</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="index.html" class="nav-logo footer-logo">
+                    <img src="logo.png" alt="Bot &amp; Bolt" style="height:50px;width:auto;object-fit:contain;" />
+                </a>
+                <p class="footer-desc">Empowering DIY enthusiasts with AI-powered diagnostics and the right parts for
+                    every job.</p>
+                <div class="footer-social">
+                    <a href="#" class="social-btn" aria-label="Twitter">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+                        </svg>
+                    </a>
+                    <a href="#" class="social-btn" aria-label="LinkedIn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="index.html">Fix &amp; Analyze</a></li>
+                        <li><a href="shop.html">Shop Parts</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Botnbolt Technologies Inc. All rights reserved.</p>
+            <p>Designed for DIYers around the world. 🌍</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

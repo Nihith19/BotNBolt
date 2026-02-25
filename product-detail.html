@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Details — Bot & Bolt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .product-page {
+            padding: calc(var(--nav-height) + 40px) 0 80px;
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        .product-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            transition: opacity .2s;
+        }
+
+        .breadcrumb a:hover {
+            opacity: .7;
+        }
+
+        .breadcrumb span {
+            color: var(--text-light);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        /* Gallery */
+        .product-gallery {}
+
+        .product-main-img {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(147, 125, 186, 0.12);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-main-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--radius-lg);
+            display: none;
+        }
+
+        .product-thumbs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .product-thumb {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            border: 2px solid rgba(147, 125, 186, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .product-thumb.active,
+        .product-thumb:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(147, 125, 186, 0.12);
+        }
+
+        /* Info */
+        .product-info {}
+
+        .product-cat-pill {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--secondary);
+            background: rgba(147, 125, 186, 0.1);
+            padding: 4px 14px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(147, 125, 186, 0.2);
+            margin-bottom: 16px;
+        }
+
+        .product-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.15;
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        .product-model {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stars {
+            color: #f59e0b;
+            font-size: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .rating-count {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .product-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .product-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .product-price-old {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+
+        .product-save {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 3px 10px;
+            border-radius: var(--radius-pill);
+        }
+
+        .product-divider {
+            height: 1px;
+            background: rgba(147, 125, 186, 0.1);
+            margin: 20px 0;
+        }
+
+        /* Delivery */
+        .delivery-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            margin-bottom: 12px;
+        }
+
+        .delivery-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--gradient-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--primary);
+        }
+
+        /* Qty + Add to cart */
+        .qty-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .qty-ctrl {
+            display: flex;
+            align-items: center;
+            border: 1.5px solid rgba(147, 125, 186, 0.2);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: white;
+        }
+
+        .qty-btn {
+            width: 38px;
+            height: 44px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            background: var(--gradient-soft);
+            color: var(--primary);
+        }
+
+        .qty-val {
+            width: 44px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .btn-add-cart {
+            flex: 1;
+            padding: 14px 24px;
+            background: var(--gradient-main);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-add-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(62, 109, 180, 0.35);
+        }
+
+        .btn-wishlist {
+            width: 50px;
+            height: 50px;
+            border: 1.5px solid rgba(147, 125, 186, 0.2);
+            border-radius: var(--radius-sm);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .btn-wishlist:hover {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        /* Tags */
+        .product-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .product-tag-chip {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: var(--radius-pill);
+            background: var(--bg);
+            border: 1px solid rgba(147, 125, 186, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* Compatibility */
+        .compat-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(147, 125, 186, 0.1);
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+
+        .compat-section h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .compat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .compat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.87rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tabs */
+        .product-tabs-wrap {
+            margin-top: 60px;
+        }
+
+        .tab-btns {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid rgba(147, 125, 186, 0.12);
+            margin-bottom: 32px;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-secondary);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .spec-table tr {
+            border-bottom: 1px solid rgba(147, 125, 186, 0.08);
+        }
+
+        .spec-table td {
+            padding: 12px 16px;
+            font-size: 0.9rem;
+        }
+
+        .spec-table td:first-child {
+            font-weight: 600;
+            color: var(--text-secondary);
+            width: 200px;
+            background: rgba(147, 125, 186, 0.03);
+        }
+
+        .spec-table td:last-child {
+            color: var(--text-muted);
+        }
+
+        .review-card {
+            background: white;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(147, 125, 186, 0.1);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .reviewer {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .review-date {
+            font-size: 0.78rem;
+            color: var(--text-light);
+        }
+
+        .review-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+
+        @media(max-width:768px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-main-img {
+                aspect-ratio: 4/3;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <!-- Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="logo.png" alt="Bot &amp; Bolt" style="height:56px;width:auto;object-fit:contain;" />
+            </a>
+            <nav class="nav-links">
+                <a href="shop.html" class="nav-link nav-cta-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                    Shop Parts
+                </a>
+                <a href="index.html#home" class="nav-link nav-cta">Fix &amp; Analyze</a>
+                <a href="login.html" class="nav-btn-outline">Sign In</a>
+                <a href="cart.html" class="nav-cart" aria-label="Cart">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.98-1.72L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </a>
+            </nav>
+            <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="shop.html" class="mobile-link">Shop Parts</a>
+        <a href="index.html#home" class="mobile-link mobile-link-primary">Fix &amp; Analyze</a>
+        <a href="login.html" class="mobile-link">Sign In</a>
+    </div>
+
+    <div class="product-page">
+        <div class="product-container">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb" data-aos="fade-up">
+                <a href="index.html">Home</a>
+                <span>›</span>
+                <a href="shop.html">Shop Parts</a>
+                <span>›</span>
+                <span id="breadcrumbName">Product</span>
+            </div>
+
+            <div class="product-grid">
+                <!-- Gallery -->
+                <div class="product-gallery" data-aos="fade-right">
+                    <div class="product-main-img" id="mainImg">
+                        <span id="mainEmoji" style="font-size:7rem">🔧</span>
+                    </div>
+                    <div class="product-thumbs" id="thumbsRow">
+                        <div class="product-thumb active" onclick="selectThumb(this,'🔧')">🔧</div>
+                        <div class="product-thumb" onclick="selectThumb(this,'📦')">📦</div>
+                        <div class="product-thumb" onclick="selectThumb(this,'🔬')">🔬</div>
+                        <div class="product-thumb" onclick="selectThumb(this,'📋')">📋</div>
+                    </div>
+                </div>
+
+                <!-- Info -->
+                <div class="product-info" data-aos="fade-left">
+                    <span class="product-cat-pill" id="prodCat">Appliances</span>
+                    <h1 class="product-name" id="prodName">Washing Machine Door Latch</h1>
+                    <div class="product-model" id="prodModel">Model No: WH01X10310 &nbsp;·&nbsp; In Stock ✅</div>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-count">(247 reviews)</span>
+                    </div>
+                    <div class="product-price-row">
+                        <span class="product-price" id="prodPrice">$8.99</span>
+                        <span class="product-price-old" id="prodOld">$14.99</span>
+                        <span class="product-save">Save 40%</span>
+                    </div>
+
+                    <div class="product-divider"></div>
+
+                    <!-- Delivery info -->
+                    <div class="delivery-row">
+                        <div class="delivery-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13" />
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                                <circle cx="5.5" cy="18.5" r="2.5" />
+                                <circle cx="18.5" cy="18.5" r="2.5" />
+                            </svg></div>
+                        <span><strong>Next-day delivery</strong> available on orders before 3 PM</span>
+                    </div>
+                    <div class="delivery-row">
+                        <div class="delivery-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg></div>
+                        <span><strong>2-Year Guarantee</strong> on all genuine replacement parts</span>
+                    </div>
+                    <div class="delivery-row">
+                        <div class="delivery-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 11 16 11" />
+                                <path d="M20.49 15a9 9 0 11-2.12-9.36L23 11" />
+                            </svg></div>
+                        <span><strong>30-day returns</strong> — hassle-free, no questions asked</span>
+                    </div>
+
+                    <div class="product-divider"></div>
+
+                    <!-- Qty & Add to cart -->
+                    <div class="qty-row">
+                        <div class="qty-ctrl">
+                            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                            <span class="qty-val" id="qtyVal">1</span>
+                            <button class="qty-btn" onclick="changeQty(1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCartDetail()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                                <line x1="3" y1="6" x2="21" y2="6" />
+                                <path d="M16 10a4 4 0 01-8 0" />
+                            </svg>
+                            Add to Cart
+                        </button>
+                        <button class="btn-wishlist" title="Save to Wishlist">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <button onclick="buyNow()" class="btn-secondary"
+                        style="width:100%;justify-content:center;margin-bottom:20px;cursor:pointer;border:none">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                        Buy Now — Go to Checkout
+                    </button>
+
+                    <!-- Tags -->
+                    <div class="product-tags">
+                        <span class="product-tag-chip" id="tagDelivery">Next-day Delivery</span>
+                        <span class="product-tag-chip">Genuine OEM Part</span>
+                        <span class="product-tag-chip">Easy Install</span>
+                        <span class="product-tag-chip">AI-Matched</span>
+                    </div>
+
+                    <!-- Compatibility -->
+                    <div class="compat-section">
+                        <h4>Compatible With</h4>
+                        <div class="compat-list" id="compatList">
+                            <div class="compat-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                    stroke="#22c55e" stroke-width="2.5">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg> GE Washer WW28H7990EW</div>
+                            <div class="compat-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                    stroke="#22c55e" stroke-width="2.5">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg> GE Washer WDPS1ELBWW</div>
+                            <div class="compat-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                    stroke="#22c55e" stroke-width="2.5">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg> GE Front Load Series 2019–2024</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs: Specs / How to Install / Reviews -->
+            <div class="product-tabs-wrap" data-aos="fade-up">
+                <div class="tab-btns">
+                    <button class="tab-btn active" onclick="switchTab(this,'specs')">Specifications</button>
+                    <button class="tab-btn" onclick="switchTab(this,'install')">How to Install</button>
+                    <button class="tab-btn" onclick="switchTab(this,'reviews')">Reviews (247)</button>
+                </div>
+                <div class="tab-panel active" id="tab-specs">
+                    <table class="spec-table">
+                        <tr>
+                            <td>Part Number</td>
+                            <td id="specModel">WH01X10310</td>
+                        </tr>
+                        <tr>
+                            <td>Category</td>
+                            <td id="specCat">Washing Machine</td>
+                        </tr>
+                        <tr>
+                            <td>Material</td>
+                            <td>High-Grade ABS Plastic + Steel Spring</td>
+                        </tr>
+                        <tr>
+                            <td>Dimensions</td>
+                            <td>4.2" × 1.8" × 1.1"</td>
+                        </tr>
+                        <tr>
+                            <td>Weight</td>
+                            <td>0.24 lbs</td>
+                        </tr>
+                        <tr>
+                            <td>Warranty</td>
+                            <td>2 Years Manufacturer Guarantee</td>
+                        </tr>
+                        <tr>
+                            <td>OEM Compatible</td>
+                            <td>Yes — Genuine GE Replacement</td>
+                        </tr>
+                        <tr>
+                            <td>Difficulty Level</td>
+                            <td>⭐ Easy (15–30 min)</td>
+                        </tr>
+                        <tr>
+                            <td>Tools Required</td>
+                            <td>Flathead Screwdriver, Pliers</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-panel" id="tab-install">
+                    <div style="max-width:680px">
+                        <p style="font-size:0.95rem;color:var(--text-muted);margin-bottom:20px;line-height:1.7">Our
+                            AI-generated guide for this part. Estimated time: <strong>25 minutes</strong> · Difficulty:
+                            ⭐ Easy</p>
+                        <div style="display:flex;flex-direction:column;gap:16px">
+                            <div style="display:flex;gap:16px;align-items:flex-start">
+                                <div
+                                    style="width:32px;height:32px;border-radius:50%;background:var(--gradient-main);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0">
+                                    1</div>
+                                <div>
+                                    <p style="font-weight:700;color:var(--text-primary);margin-bottom:4px">Unplug the
+                                        washing machine</p>
+                                    <p style="font-size:0.88rem;color:var(--text-muted)">Safety first — disconnect power
+                                        before any repair.</p>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:16px;align-items:flex-start">
+                                <div
+                                    style="width:32px;height:32px;border-radius:50%;background:var(--gradient-main);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0">
+                                    2</div>
+                                <div>
+                                    <p style="font-weight:700;color:var(--text-primary);margin-bottom:4px">Open the door
+                                        fully</p>
+                                    <p style="font-size:0.88rem;color:var(--text-muted)">Carefully pry off the inner
+                                        door panel using a flathead screwdriver around the edge.</p>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:16px;align-items:flex-start">
+                                <div
+                                    style="width:32px;height:32px;border-radius:50%;background:var(--gradient-main);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0">
+                                    3</div>
+                                <div>
+                                    <p style="font-weight:700;color:var(--text-primary);margin-bottom:4px">Remove the
+                                        old latch</p>
+                                    <p style="font-size:0.88rem;color:var(--text-muted)">Locate the two screws holding
+                                        the latch assembly. Remove them and disconnect the wire harness.</p>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:16px;align-items:flex-start">
+                                <div
+                                    style="width:32px;height:32px;border-radius:50%;background:var(--gradient-main);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0">
+                                    4</div>
+                                <div>
+                                    <p style="font-weight:700;color:var(--text-primary);margin-bottom:4px">Install new
+                                        latch</p>
+                                    <p style="font-size:0.88rem;color:var(--text-muted)">Snap the new latch into place,
+                                        reconnect the wire harness, and secure with screws.</p>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:16px;align-items:flex-start">
+                                <div
+                                    style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;flex-shrink:0">
+                                    ✓</div>
+                                <div>
+                                    <p style="font-weight:700;color:#22c55e;margin-bottom:4px">Test & reassemble</p>
+                                    <p style="font-size:0.88rem;color:var(--text-muted)">Plug back in, run a short cycle
+                                        to confirm the latch works, then reattach the door panel.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-panel" id="tab-reviews">
+                    <div class="review-card">
+                        <div class="review-header"><span class="reviewer">James T.</span>
+                            <div><span class="stars" style="font-size:0.85rem">★★★★★</span><span class="review-date"> ·
+                                    3 weeks ago</span></div>
+                        </div>
+                        <p class="review-text">Fit perfectly on my GE washer. The fix took about 20 minutes — way easier
+                            than I expected. Bot & Bolt's guide was spot on. Saved me $280 compared to calling a
+                            technician.</p>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-header"><span class="reviewer">Sarah M.</span>
+                            <div><span class="stars" style="font-size:0.85rem">★★★★★</span><span class="review-date"> ·
+                                    1 month ago</span></div>
+                        </div>
+                        <p class="review-text">Exactly as described. Part arrived next day, which was amazing. The AI
+                            diagnosis tool identified this part without me even knowing the model number — just a photo.
+                            Incredible!</p>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-header"><span class="reviewer">David R.</span>
+                            <div><span class="stars" style="font-size:0.85rem">★★★★☆</span><span class="review-date"> ·
+                                    2 months ago</span></div>
+                        </div>
+                        <p class="review-text">Good quality part, arrived quickly. The installation guide could have a
+                            bit more detail for some of the connector types, but overall great experience.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer shortened -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="index.html" class="nav-logo footer-logo">
+                    <img src="logo.png" alt="Bot &amp; Bolt" style="height:50px;width:auto;object-fit:contain;" />
+                </a>
+                <p class="footer-desc">Empowering DIY enthusiasts with AI-powered diagnostics and the right parts for
+                    every job.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="index.html">Fix &amp; Analyze</a></li>
+                        <li><a href="shop.html">Shop Parts</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy</a></li>
+                        <li><a href="terms.html">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Botnbolt Technologies Inc. All rights reserved.</p>
+            <p>Designed for DIYers around the world. 🌍</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Load product from URL params or localStorage
+        const params = new URLSearchParams(location.search);
+        const prodId = params.get('id');
+        const partsDB = [
+            { id: 1, name: 'Washing Machine Door Latch', model: 'WH01X10310', price: '$8.99', old: '$14.99', cat: 'Appliances', icon: '🫧', delivery: 'Next-day', compat: ['GE Washer WW28H7990EW', 'GE Washer WDPS1ELBWW', 'GE Front Load 2019–2024'], specCat: 'Washing Machine' },
+            { id: 2, name: 'Refrigerator Water Filter', model: 'MWF-GE-GENUINE', price: '$18.49', old: '$24.99', cat: 'Appliances', icon: '🧊', delivery: '2-3 days', compat: ['GE Profile Series', 'GE Cafe Series', 'GE Artistry Series'], specCat: 'Refrigerator' },
+            { id: 3, name: 'Dishwasher Spray Arm', model: 'WD01X24756', price: '$24.99', old: '$34.99', cat: 'Appliances', icon: '🍽️', delivery: 'Next-day', compat: ['GE Dishwasher GDT695SMJES', 'GE Profile PDT715SMNES', 'GE GDT630PMMES'], specCat: 'Dishwasher' },
+            { id: 4, name: 'Bathroom Faucet Cartridge', model: 'RP46074', price: '$14.79', old: '$22.00', cat: 'Plumbing', icon: '🚿', delivery: 'Next-day', compat: ['Delta Single Handle Faucet', 'Delta 1400 Series', 'Delta Monitor 14'], specCat: 'Plumbing' },
+            { id: 5, name: 'Toilet Fill Valve Kit', model: 'B&T-400A', price: '$11.29', old: '$18.00', cat: 'Plumbing', icon: '🚽', delivery: '2-3 days', compat: ['Universal — fits most 2-piece toilets', 'Kohler', 'American Standard'], specCat: 'Plumbing' },
+            { id: 6, name: 'Dryer Heating Element', model: 'WE11M23', price: '$32.50', old: '$49.99', cat: 'Appliances', icon: '🌀', delivery: 'Next-day', compat: ['GE Dryer GTDP490ED2WS', 'GE GTDX300EM1WS', 'GE Hotpoint Series'], specCat: 'Dryer' },
+            { id: 7, name: 'Phone Screen Replacement', model: 'IP14-LCD-OEM', price: '$49.99', old: '$79.99', cat: 'Electronics', icon: '📱', delivery: '3-5 days', compat: ['iPhone 14', 'iPhone 14 Plus'], specCat: 'Smartphone' },
+            { id: 8, name: 'Laptop Battery Replacement', model: 'A1405-MBP13', price: '$67.00', old: '$99.99', cat: 'Electronics', icon: '💻', delivery: '3-5 days', compat: ['MacBook Pro 13" 2011–2013', 'MacBook Air 13" 2012'], specCat: 'Laptop' },
+            { id: 9, name: 'Vacuum Motor Filter', model: 'HEPA-DC25', price: '$9.99', old: '$15.99', cat: 'Cleaning', icon: '🌀', delivery: '2-3 days', compat: ['Dyson DC25', 'Dyson DC24', 'Dyson DC27'], specCat: 'Vacuum' },
+            { id: 10, name: 'Power Drill Carbon Brushes', model: 'CB-DW371', price: '$7.49', old: '$12.00', cat: 'Tools', icon: '🔧', delivery: 'Next-day', compat: ['DeWalt DW371', 'DeWalt DW387', 'DeWalt DW368'], specCat: 'Power Tools' },
+            { id: 11, name: 'AC Capacitor 35+5 MFD', model: 'CAP-35-5-440V', price: '$15.99', old: '$24.00', cat: 'HVAC', icon: '❄️', delivery: 'Next-day', compat: ['Universal fit — most 2.5–5 ton AC units', 'Carrier', 'Lennox', 'Trane'], specCat: 'HVAC / Air Conditioner' },
+            { id: 12, name: 'Microwave Door Switch', model: 'WB24X829', price: '$6.49', old: '$11.99', cat: 'Appliances', icon: '📡', delivery: '2-3 days', compat: ['GE Microwave JVM3160DFBB', 'GE JES1460DSBB', 'GE Profile Series'], specCat: 'Microwave' },
+        ];
+
+        const prod = partsDB.find(p => p.id == prodId) || partsDB[0];
+        document.title = prod.name + ' — Bot & Bolt';
+        document.getElementById('breadcrumbName').textContent = prod.name;
+        document.getElementById('prodCat').textContent = prod.cat;
+        document.getElementById('prodName').textContent = prod.name;
+        document.getElementById('prodModel').textContent = 'Model No: ' + prod.model + ' · In Stock ✅';
+        document.getElementById('prodPrice').textContent = prod.price;
+        document.getElementById('prodOld').textContent = prod.old;
+        document.getElementById('mainEmoji').textContent = prod.icon;
+        document.getElementById('tagDelivery').textContent = prod.delivery + ' Delivery';
+        document.getElementById('specModel').textContent = prod.model;
+        document.getElementById('specCat').textContent = prod.specCat;
+        document.getElementById('compatList').innerHTML = prod.compat.map(c =>
+            `<div class="compat-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ${c}</div>`
+        ).join('');
+        // thumb emojis
+        const thumbEmojis = [prod.icon, '📦', '🔬', '📋'];
+        document.querySelectorAll('.product-thumb').forEach((el, i) => { el.textContent = thumbEmojis[i]; el.onclick = () => selectThumb(el, thumbEmojis[i]); });
+
+        function selectThumb(el, emoji) {
+            document.querySelectorAll('.product-thumb').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('mainEmoji').textContent = emoji;
+        }
+
+        let qty = 1;
+        function changeQty(d) { qty = Math.max(1, qty + d); document.getElementById('qtyVal').textContent = qty; }
+
+        function addToCartDetail() {
+            const cart = JSON.parse(localStorage.getItem('bnb_cart') || '[]');
+            const existing = cart.find(i => i.id === prod.id);
+            if (existing) { existing.qty += qty; } else { cart.push({ ...prod, qty }); }
+            localStorage.setItem('bnb_cart', JSON.stringify(cart));
+            const btn = document.querySelector('.btn-add-cart');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Added to Cart!';
+            btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+            setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 2000);
+            // update badge
+            const badge = document.querySelector('.cart-badge');
+            if (badge) badge.textContent = cart.reduce((s, i) => s + i.qty, 0);
+        }
+
+        function buyNow() {
+            // Add to cart first, then navigate
+            const cart = JSON.parse(localStorage.getItem('bnb_cart') || '[]');
+            const existing = cart.find(i => i.id === prod.id);
+            if (existing) { existing.qty += qty; } else { cart.push({ ...prod, qty }); }
+            localStorage.setItem('bnb_cart', JSON.stringify(cart));
+            window.location.href = 'cart.html';
+        }
+
+        function switchTab(btn, id) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + id).classList.add('active');
+        }
+
+        // Cart count
+        const cart = JSON.parse(localStorage.getItem('bnb_cart') || '[]');
+        const badge = document.getElementById('cartCount');
+        if (badge && cart.length) badge.textContent = cart.reduce((s, i) => s + i.qty, 0);
+    </script>
+</body>
+
+</html>

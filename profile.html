@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Account — Bot &amp; Bolt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .profile-page {
+            padding-top: var(--nav-height);
+            min-height: 100vh;
+            background: var(--bg);
+        }
+
+        /* ── Hero ── */
+        .profile-hero {
+            background: var(--gradient-main);
+            padding: 48px 24px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 15% 50%, rgba(255, 255, 255, 0.1), transparent 60%);
+            pointer-events: none;
+        }
+
+        .profile-hero-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-avatar-lg {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .profile-hero-info {
+            flex: 1;
+        }
+
+        .profile-hero-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .profile-hero-email {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .profile-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: var(--radius-pill);
+            padding: 5px 14px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: .08em;
+            margin-top: 10px;
+        }
+
+        /* ── Tabs ── */
+        .profile-tabs-bar {
+            background: white;
+            border-bottom: 1px solid rgba(147, 125, 186, 0.12);
+            position: sticky;
+            top: var(--nav-height);
+            z-index: 100;
+        }
+
+        .profile-tabs-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            gap: 0;
+        }
+
+        .profile-tab {
+            padding: 16px 24px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-tab:hover {
+            color: var(--primary);
+        }
+
+        .profile-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* ── Content ── */
+        .profile-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        .profile-panel {
+            display: none;
+        }
+
+        .profile-panel.active {
+            display: block;
+        }
+
+        /* ── Account Details ── */
+        .profile-card {
+            background: white;
+            border: 1px solid rgba(147, 125, 186, 0.15);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .profile-card-header {
+            padding: 18px 24px;
+            background: var(--gradient-soft);
+            border-bottom: 1px solid rgba(147, 125, 186, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .profile-card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--secondary);
+        }
+
+        .profile-edit-btn {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            transition: background .2s;
+        }
+
+        .profile-edit-btn:hover {
+            background: rgba(62, 109, 180, 0.07);
+        }
+
+        .profile-field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .profile-field {
+            padding: 18px 24px;
+            border-bottom: 1px solid rgba(147, 125, 186, 0.07);
+            border-right: 1px solid rgba(147, 125, 186, 0.07);
+        }
+
+        .profile-field:nth-child(even) {
+            border-right: none;
+        }
+
+        .profile-field:nth-last-child(-n+2) {
+            border-bottom: none;
+        }
+
+        .profile-field-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .profile-field-value {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .profile-field-value.muted {
+            color: var(--text-muted);
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        /* Edit form */
+        .profile-edit-form {
+            padding: 20px 24px;
+            display: none;
+        }
+
+        .profile-edit-form.open {
+            display: block;
+        }
+
+        .pef-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .pef-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .pef-group label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--text-secondary);
+        }
+
+        .pef-group input {
+            padding: 10px 14px;
+            border: 1.5px solid rgba(147, 125, 186, 0.2);
+            border-radius: var(--radius-sm);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            background: white;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .pef-group input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(147, 125, 186, 0.1);
+        }
+
+        .pef-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .pef-save {
+            padding: 10px 24px;
+            background: var(--gradient-main);
+            color: white;
+            border: none;
+            border-radius: var(--radius-pill);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pef-save:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(62, 109, 180, 0.3);
+        }
+
+        .pef-cancel {
+            padding: 10px 20px;
+            background: none;
+            border: 1.5px solid rgba(147, 125, 186, 0.25);
+            border-radius: var(--radius-pill);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pef-cancel:hover {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        /* Sign out row */
+        .profile-signout-row {
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .profile-signout-row p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .profile-signout-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 20px;
+            background: rgba(239, 68, 68, 0.06);
+            border: 1.5px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius-pill);
+            color: #ef4444;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-signout-btn:hover {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: #ef4444;
+        }
+
+        /* ── Orders ── */
+        .orders-empty {
+            text-align: center;
+            padding: 60px 24px;
+            color: var(--text-muted);
+        }
+
+        .orders-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .orders-empty h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .orders-empty p {
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        .order-card {
+            background: white;
+            border: 1px solid rgba(147, 125, 186, 0.15);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .order-card-header {
+            padding: 14px 20px;
+            background: var(--gradient-soft);
+            border-bottom: 1px solid rgba(147, 125, 186, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .order-id {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            font-family: 'DM Sans', monospace;
+        }
+
+        .order-date {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .order-status {
+            padding: 4px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+        }
+
+        .order-status.delivered {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .order-status.processing {
+            background: rgba(62, 109, 180, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(62, 109, 180, 0.2);
+        }
+
+        .order-status.shipped {
+            background: rgba(251, 191, 36, 0.1);
+            color: #92400e;
+            border: 1px solid rgba(251, 191, 36, 0.25);
+        }
+
+        .order-items {
+            padding: 12px 20px;
+        }
+
+        .order-item-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(147, 125, 186, 0.07);
+        }
+
+        .order-item-row:last-child {
+            border-bottom: none;
+        }
+
+        .order-item-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: var(--gradient-soft);
+            border: 1px solid rgba(147, 125, 186, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .order-item-name {
+            flex: 1;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .order-item-qty {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .order-item-price {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .order-card-footer {
+            padding: 12px 20px;
+            border-top: 1px solid rgba(147, 125, 186, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .order-total {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .order-track-btn {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            padding: 5px 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background .2s;
+        }
+
+        .order-track-btn:hover {
+            background: rgba(62, 109, 180, 0.07);
+        }
+
+        @media (max-width: 640px) {
+            .profile-field-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-field {
+                border-right: none;
+            }
+
+            .pef-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-hero-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <!-- Nav -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="logo.png" alt="Bot &amp; Bolt" style="height:56px;width:auto;object-fit:contain;" />
+            </a>
+            <nav class="nav-links">
+                <a href="shop.html" class="nav-link nav-cta-secondary">Shop Parts</a>
+                <a href="index.html#home" class="nav-link nav-cta">Fix &amp; Analyze</a>
+                <a href="login.html" class="nav-btn-outline">Sign In</a>
+                <a href="cart.html" class="nav-cart" aria-label="Cart">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.98-1.72L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </a>
+            </nav>
+            <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="shop.html" class="mobile-link">Shop Parts</a>
+        <a href="index.html#home" class="mobile-link mobile-link-primary">Fix &amp; Analyze</a>
+        <a href="login.html" class="mobile-link">Sign In</a>
+    </div>
+
+    <div class="profile-page" id="profilePage">
+
+        <!-- Hero -->
+        <div class="profile-hero">
+            <div class="profile-hero-inner">
+                <div class="profile-avatar-lg" id="profileAvatarLg">?</div>
+                <div class="profile-hero-info">
+                    <div class="profile-hero-name" id="profileHeroName">Loading…</div>
+                    <div class="profile-hero-email" id="profileHeroEmail"></div>
+                    <div class="profile-hero-badge">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        VERIFIED MEMBER
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab bar -->
+        <div class="profile-tabs-bar">
+            <div class="profile-tabs-inner">
+                <button class="profile-tab active" onclick="switchTab('details', this)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    Account Details
+                </button>
+                <button class="profile-tab" onclick="switchTab('orders', this)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                    My Orders
+                </button>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="profile-content">
+
+            <!-- ===== ACCOUNT DETAILS PANEL ===== -->
+            <div class="profile-panel active" id="panel-details">
+
+                <!-- Personal info card -->
+                <div class="profile-card">
+                    <div class="profile-card-header">
+                        <div class="profile-card-title">Personal Information</div>
+                        <button class="profile-edit-btn" onclick="toggleEdit()">✏️ Edit</button>
+                    </div>
+
+                    <!-- View mode -->
+                    <div id="detailsView">
+                        <div class="profile-field-grid">
+                            <div class="profile-field">
+                                <div class="profile-field-label">Full Name</div>
+                                <div class="profile-field-value" id="fieldName">—</div>
+                            </div>
+                            <div class="profile-field">
+                                <div class="profile-field-label">Email Address</div>
+                                <div class="profile-field-value" id="fieldEmail">—</div>
+                            </div>
+                            <div class="profile-field">
+                                <div class="profile-field-label">Phone</div>
+                                <div class="profile-field-value muted" id="fieldPhone">Not set</div>
+                            </div>
+                            <div class="profile-field">
+                                <div class="profile-field-label">Member Since</div>
+                                <div class="profile-field-value" id="fieldSince">—</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit mode -->
+                    <div class="profile-edit-form" id="editForm">
+                        <div class="pef-grid">
+                            <div class="pef-group">
+                                <label>First Name</label>
+                                <input type="text" id="editFirst" placeholder="First name" />
+                            </div>
+                            <div class="pef-group">
+                                <label>Last Name</label>
+                                <input type="text" id="editLast" placeholder="Last name" />
+                            </div>
+                            <div class="pef-group">
+                                <label>Email Address</label>
+                                <input type="email" id="editEmail" placeholder="Email" />
+                            </div>
+                            <div class="pef-group">
+                                <label>Phone (optional)</label>
+                                <input type="tel" id="editPhone" placeholder="+1 (555) 000-0000" />
+                            </div>
+                        </div>
+                        <div class="pef-actions">
+                            <button class="pef-save" onclick="saveDetails()">Save Changes</button>
+                            <button class="pef-cancel" onclick="toggleEdit()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address card -->
+                <div class="profile-card">
+                    <div class="profile-card-header">
+                        <div class="profile-card-title">Delivery Address</div>
+                        <button class="profile-edit-btn" onclick="toggleAddress()">✏️ Edit</button>
+                    </div>
+                    <div id="addressView">
+                        <div class="profile-field-grid">
+                            <div class="profile-field">
+                                <div class="profile-field-label">Street</div>
+                                <div class="profile-field-value muted" id="fieldStreet">Not set</div>
+                            </div>
+                            <div class="profile-field">
+                                <div class="profile-field-label">City</div>
+                                <div class="profile-field-value muted" id="fieldCity">Not set</div>
+                            </div>
+                            <div class="profile-field">
+                                <div class="profile-field-label">State / ZIP</div>
+                                <div class="profile-field-value muted" id="fieldZip">Not set</div>
+                            </div>
+                            <div class="profile-field">
+                                <div class="profile-field-label">Country</div>
+                                <div class="profile-field-value muted" id="fieldCountry">Not set</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-edit-form" id="addressForm">
+                        <div class="pef-grid">
+                            <div class="pef-group" style="grid-column:1/-1">
+                                <label>Street Address</label>
+                                <input type="text" id="editStreet" placeholder="123 Main St" />
+                            </div>
+                            <div class="pef-group">
+                                <label>City</label>
+                                <input type="text" id="editCity" placeholder="New York" />
+                            </div>
+                            <div class="pef-group">
+                                <label>State &amp; ZIP</label>
+                                <input type="text" id="editZip" placeholder="NY 10001" />
+                            </div>
+                            <div class="pef-group">
+                                <label>Country</label>
+                                <input type="text" id="editCountry" placeholder="United States" />
+                            </div>
+                        </div>
+                        <div class="pef-actions">
+                            <button class="pef-save" onclick="saveAddress()">Save Address</button>
+                            <button class="pef-cancel" onclick="toggleAddress()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sign out card -->
+                <div class="profile-card">
+                    <div class="profile-signout-row">
+                        <p>Signed in as <strong id="signedInAs">—</strong></p>
+                        <button class="profile-signout-btn" onclick="signOut()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MY ORDERS PANEL ===== -->
+            <div class="profile-panel" id="panel-orders">
+                <div id="ordersContainer"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const user = JSON.parse(localStorage.getItem('bnb_user') || 'null');
+        const profile = JSON.parse(localStorage.getItem('bnb_profile') || '{}');
+
+        // Redirect to login if not signed in
+        if (!user) { window.location.href = 'login.html'; }
+
+        // Populate hero
+        const initials = user?.name ? user.name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase() : '?';
+        document.getElementById('profileAvatarLg').textContent = initials;
+        document.getElementById('profileHeroName').textContent = user?.name || '—';
+        document.getElementById('profileHeroEmail').textContent = user?.email || '';
+        document.getElementById('signedInAs').textContent = user?.email || '—';
+
+        // Populate fields
+        document.getElementById('fieldName').textContent = user?.name || '—';
+        document.getElementById('fieldEmail').textContent = user?.email || '—';
+        document.getElementById('fieldPhone').textContent = profile.phone || 'Not set';
+        document.getElementById('fieldSince').textContent = profile.since || new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+        document.getElementById('fieldStreet').textContent = profile.street || 'Not set';
+        document.getElementById('fieldCity').textContent = profile.city || 'Not set';
+        document.getElementById('fieldZip').textContent = profile.zip || 'Not set';
+        document.getElementById('fieldCountry').textContent = profile.country || 'Not set';
+
+        // Cart badge
+        const cart = JSON.parse(localStorage.getItem('bnb_cart') || '[]');
+        const badge = document.getElementById('cartCount');
+        if (badge) badge.textContent = cart.reduce((s, i) => s + i.qty, 0);
+
+        /* ── Tab switch ── */
+        function switchTab(id, btn) {
+            document.querySelectorAll('.profile-tab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.profile-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('panel-' + id).classList.add('active');
+            if (id === 'orders') renderOrders();
+        }
+
+        /* ── Edit personal details ── */
+        function toggleEdit() {
+            const form = document.getElementById('editForm');
+            const view = document.getElementById('detailsView');
+            const open = form.classList.toggle('open');
+            view.style.display = open ? 'none' : '';
+            if (open) {
+                const parts = (user?.name || '').split(' ');
+                document.getElementById('editFirst').value = parts[0] || '';
+                document.getElementById('editLast').value = parts.slice(1).join(' ') || '';
+                document.getElementById('editEmail').value = user?.email || '';
+                document.getElementById('editPhone').value = profile.phone || '';
+            }
+        }
+
+        function saveDetails() {
+            const first = document.getElementById('editFirst').value.trim();
+            const last = document.getElementById('editLast').value.trim();
+            const email = document.getElementById('editEmail').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+            const name = [first, last].filter(Boolean).join(' ') || user.name;
+            user.name = name;
+            user.email = email || user.email;
+            profile.phone = phone;
+            localStorage.setItem('bnb_user', JSON.stringify(user));
+            localStorage.setItem('bnb_profile', JSON.stringify(profile));
+            // Refresh display
+            document.getElementById('fieldName').textContent = name;
+            document.getElementById('fieldEmail').textContent = user.email;
+            document.getElementById('fieldPhone').textContent = phone || 'Not set';
+            document.getElementById('profileHeroName').textContent = name;
+            document.getElementById('profileAvatarLg').textContent = name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
+            document.getElementById('signedInAs').textContent = user.email;
+            toggleEdit();
+        }
+
+        /* ── Edit address ── */
+        function toggleAddress() {
+            const form = document.getElementById('addressForm');
+            const view = document.getElementById('addressView');
+            const open = form.classList.toggle('open');
+            view.style.display = open ? 'none' : '';
+            if (open) {
+                document.getElementById('editStreet').value = profile.street || '';
+                document.getElementById('editCity').value = profile.city || '';
+                document.getElementById('editZip').value = profile.zip || '';
+                document.getElementById('editCountry').value = profile.country || '';
+            }
+        }
+
+        function saveAddress() {
+            profile.street = document.getElementById('editStreet').value.trim();
+            profile.city = document.getElementById('editCity').value.trim();
+            profile.zip = document.getElementById('editZip').value.trim();
+            profile.country = document.getElementById('editCountry').value.trim();
+            localStorage.setItem('bnb_profile', JSON.stringify(profile));
+            document.getElementById('fieldStreet').textContent = profile.street || 'Not set';
+            document.getElementById('fieldCity').textContent = profile.city || 'Not set';
+            document.getElementById('fieldZip').textContent = profile.zip || 'Not set';
+            document.getElementById('fieldCountry').textContent = profile.country || 'Not set';
+            ['fieldStreet', 'fieldCity', 'fieldZip', 'fieldCountry'].forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.toggle('muted', !el.textContent || el.textContent === 'Not set');
+            });
+            toggleAddress();
+        }
+
+        /* ── Sign out ── */
+        function signOut() {
+            localStorage.removeItem('bnb_user');
+            window.location.href = 'login.html';
+        }
+
+        /* ── Orders ── */
+        function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+            // Check if cart has items to show as a "recent order" (demo)
+            const savedOrders = JSON.parse(localStorage.getItem('bnb_orders') || 'null');
+
+            // Demo orders — shown if no real orders exist
+            const demoOrders = [
+                {
+                    id: 'BNB-2026-0041',
+                    date: 'Feb 20, 2026',
+                    status: 'delivered',
+                    items: [
+                        { icon: '🔗', name: 'Door Latch Assembly WH01X10310', qty: 1, price: '$18.99' },
+                        { icon: '🔧', name: 'T20 Torx Screwdriver', qty: 1, price: '$4.49' },
+                    ],
+                    total: '$25.23'
+                },
+                {
+                    id: 'BNB-2026-0028',
+                    date: 'Feb 10, 2026',
+                    status: 'delivered',
+                    items: [
+                        { icon: '💧', name: 'Dishwasher Spray Arm', qty: 1, price: '$24.99' },
+                    ],
+                    total: '$26.99'
+                }
+            ];
+
+            const orders = savedOrders || demoOrders;
+
+            if (!orders.length) {
+                container.innerHTML = `
+                  <div class="orders-empty">
+                    <div class="orders-empty-icon">📦</div>
+                    <h3>No orders yet</h3>
+                    <p>Once you place an order, it'll appear here.</p>
+                    <a href="shop.html" class="btn-primary" style="display:inline-flex">Shop Parts →</a>
+                  </div>`;
+                return;
+            }
+
+            const statusLabel = { delivered: '✓ Delivered', processing: '⟳ Processing', shipped: '🚚 Shipped' };
+
+            container.innerHTML = orders.map(order => `
+              <div class="order-card">
+                <div class="order-card-header">
+                  <div>
+                    <div class="order-id">Order #${order.id}</div>
+                    <div class="order-date">${order.date}</div>
+                  </div>
+                  <div class="order-status ${order.status}">${statusLabel[order.status] || order.status}</div>
+                </div>
+                <div class="order-items">
+                  ${order.items.map(item => `
+                    <div class="order-item-row">
+                      <div class="order-item-icon">${item.icon}</div>
+                      <div class="order-item-name">${item.name}</div>
+                      <div class="order-item-qty">× ${item.qty}</div>
+                      <div class="order-item-price">${item.price}</div>
+                    </div>`).join('')}
+                </div>
+                <div class="order-card-footer">
+                  <div class="order-total">Total: ${order.total}</div>
+                  <button class="order-track-btn">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Track Order
+                  </button>
+                </div>
+              </div>`).join('');
+        }
+        // Deep-link via ?tab=orders or ?tab=details
+        const tabParam = new URLSearchParams(window.location.search).get('tab');
+        if (tabParam === 'orders') {
+            const btn = document.querySelector('.profile-tab:nth-child(2)');
+            if (btn) btn.click();
+        }
+    </script>
+</body>
+
+</html>

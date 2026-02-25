@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bot & Bolt — AI-Powered Repair Assistant | Save Time. Save Money.</title>
+    <meta name="description"
+        content="Upload a photo of any broken item. Our intelligent AI system diagnoses the issue, generates a step-by-step guide, and finds the exact parts you need. Fix Anything. Instantly." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- Animated Background Particles -->
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <!-- Navigation -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="logo.png" alt="Bot &amp; Bolt" style="height:56px;width:auto;object-fit:contain;" />
+            </a>
+            <nav class="nav-links">
+                <a href="shop.html" class="nav-link nav-cta-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                    Shop Parts
+                </a>
+                <a href="index.html#home" class="nav-link nav-cta">Fix &amp; Analyze</a>
+                <a href="login.html" class="nav-btn-outline">Sign In</a>
+                <a href="cart.html" class="nav-cart" aria-label="Cart" id="cartNavBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.98-1.72L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </a>
+            </nav>
+            <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="shop.html" class="mobile-link">Shop Parts</a>
+        <a href="index.html#home" class="mobile-link mobile-link-primary">Fix &amp; Analyze</a>
+        <a href="login.html" class="mobile-link">Sign In</a>
+    </div>
+
+    <!-- ======= HERO SECTION ======= -->
+    <section class="hero" id="home">
+        <div class="hero-glow hero-glow-1"></div>
+        <div class="hero-glow hero-glow-2"></div>
+        <div class="hero-glow hero-glow-3"></div>
+
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge" data-aos="fade-up">
+                    <span class="badge-dot"></span>
+                    <span>AI-POWERED REPAIR ASSISTANT</span>
+                </div>
+
+                <h1 class="hero-heading" data-aos="fade-up" data-aos-delay="100">
+                    Fix Anything.<br />
+                    <span class="hero-heading-gradient">Instantly.</span>
+                </h1>
+
+                <p class="hero-subheading" data-aos="fade-up" data-aos-delay="200">
+                    Upload a photo of any broken item. Our intelligent system diagnoses the issue, generates a
+                    step-by-step guide, and finds the exact parts you need.
+                </p>
+
+                <div class="hero-actions" data-aos="fade-up" data-aos-delay="300">
+                    <a href="#analyze" class="btn-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <polygon points="23 7 16 12 23 17 23 7" />
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                        </svg>
+                        Start Diagnosing Free
+                    </a>
+                    <a href="shop.html" class="btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <path d="M16 10a4 4 0 01-8 0" />
+                        </svg>
+                        Browse Parts
+                    </a>
+                </div>
+
+                <div class="hero-stats" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stat-item">
+                        <div style="display:flex;align-items:baseline;gap:2px">
+                            <span class="stat-number" data-count="50">0</span><span class="stat-suffix">K+</span>
+                        </div>
+                        <span class="stat-label">Repairs Guided</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <div style="display:flex;align-items:baseline;gap:2px">
+                            <span class="stat-number" data-count="98">0</span><span class="stat-suffix">%</span>
+                        </div>
+                        <span class="stat-label">Accuracy Rate</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <div style="display:flex;align-items:baseline;gap:2px">
+                            <span class="stat-number" data-count="3">0</span><span class="stat-suffix">.5hrs</span>
+                        </div>
+                        <span class="stat-label">Avg. Time Saved</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual" data-aos="fade-left" data-aos-delay="200">
+                <div class="upload-card">
+                    <div class="upload-card-glow"></div>
+                    <!-- Hidden file input -->
+                    <input type="file" id="heroFileInput" accept="image/*" style="display:none"
+                        onchange="handleHeroUpload(this)" />
+                    <div class="upload-area" id="heroUpload" onclick="document.getElementById('heroFileInput').click()">
+                        <div class="upload-icon-wrap">
+                            <div class="upload-icon-ring"></div>
+                            <svg class="upload-icon" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                                stroke="url(#uploadGrad)" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="3" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                                <defs>
+                                    <linearGradient id="uploadGrad" x1="0" y1="0" x2="24" y2="24"
+                                        gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#3e6db4" />
+                                        <stop offset="100%" stop-color="#937dba" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <p class="upload-title" id="heroUploadTitle">Upload Photo</p>
+                        <p class="upload-sub" id="heroUploadSub">Drag &amp; drop or click to scan<br />your broken item
+                        </p>
+                        <div class="upload-tags">
+                            <span class="upload-tag">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                AI DIAGNOSIS
+                            </span>
+                            <span class="upload-tag">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                                    <line x1="8" y1="21" x2="16" y2="21" />
+                                    <line x1="12" y1="17" x2="12" y2="21" />
+                                </svg>
+                                ANY FORMAT
+                            </span>
+                        </div>
+                    </div>
+                    <div class="repair-history">
+                        <div class="history-header">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                            </svg>
+                            Recent Diagnoses
+                        </div>
+                        <div class="history-empty">
+                            <span>No recent repairs — your history appears here automatically.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating cards -->
+                <div class="floating-card float-1">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3e6db4" stroke-width="2.5">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    <span>AI Diagnosis Complete</span>
+                </div>
+                <div class="floating-card float-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#937dba" stroke-width="2.5">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span>Guide Ready in 8s</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-line"></div>
+            <span>Scroll to explore</span>
+        </div>
+    </section>
+
+    <!-- ======= HOW IT WORKS ======= -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="section-label">THE PROCESS</span>
+                <h2 class="section-title">Repair in <span class="text-gradient">4 Simple Steps</span></h2>
+                <p class="section-sub">From broken to fixed in minutes, not days. No expertise required.</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="step-number">01</div>
+                    <div class="step-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8">
+                            <rect x="3" y="3" width="18" height="18" rx="3" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                    </div>
+                    <h3>Upload Photo</h3>
+                    <p>Snap a picture of the broken item. Our AI accepts any format, from any device.</p>
+                    <div class="step-line"></div>
+                </div>
+
+                <div class="step-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-number">02</div>
+                    <div class="step-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 8v4l3 3" />
+                            <path d="M5 3L2 6v3M19 3l3 3v3" />
+                        </svg>
+                    </div>
+                    <h3>AI Diagnosis</h3>
+                    <p>Relax while our AI identifies the exact issue, part model, and root cause — in seconds.</p>
+                    <div class="step-line"></div>
+                </div>
+
+                <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-number">03</div>
+                    <div class="step-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
+                    </div>
+                    <h3>Get The Fix</h3>
+                    <p>Receive a tailored repair guide &amp; exact parts list. Clear, professional, step-by-step.</p>
+                    <div class="step-line"></div>
+                </div>
+
+                <div class="step-card step-card-last" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-number">04</div>
+                    <div class="step-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8">
+                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    </div>
+                    <h3>Fix &amp; Save</h3>
+                    <p>Repair it yourself and save hundreds. You control the products and the process.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= BEFORE / AFTER SECTION ======= -->
+    <section class="compare-section" id="compare">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="section-label">THE DIFFERENCE</span>
+                <h2 class="section-title">Before vs. <span class="text-gradient">After Bot &amp; Bolt</span></h2>
+                <p class="section-sub">See how we transform a frustrating repair nightmare into a smooth, money-saving
+                    experience.</p>
+            </div>
+
+            <div class="compare-grid" data-aos="fade-up" data-aos-delay="100">
+                <div class="compare-card compare-before">
+                    <div class="compare-badge">Without Bot &amp; Bolt</div>
+                    <ul class="compare-list">
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444"
+                                stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                            Multiple store trips
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444"
+                                stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                            10s of dollars wasted on wrong parts
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444"
+                                stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                            Hours of YouTube rabbit holes
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444"
+                                stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                            High frustration, low confidence
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444"
+                                stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                            $300 contractor for a 20-min job
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="compare-vs">
+                    <span>VS</span>
+                </div>
+
+                <div class="compare-card compare-after">
+                    <div class="compare-badge compare-badge-after">With Bot &amp; Bolt</div>
+                    <ul class="compare-list">
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            Instant AI diagnosis — one photo
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            Spend only on the right parts
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            30-minute fix with clear guide
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            Zero frustration, total confidence
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            You control what products are used
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="compare-quote" data-aos="fade-up" data-aos-delay="200">
+                <svg class="quote-icon" width="32" height="32" viewBox="0 0 24 24" fill="url(#qGrad)">
+                    <path
+                        d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
+                    <path
+                        d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" />
+                    <defs>
+                        <linearGradient id="qGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#3e6db4" stop-opacity="0.4" />
+                            <stop offset="100%" stop-color="#937dba" stop-opacity="0.4" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <p>You just saved <strong>3.5 hours</strong>, <strong>10s or 100s of dollars</strong>, and your
+                    sanity.<br />Bonus? <em>You control what products are used.</em></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= FEATURES SECTION ======= -->
+    <section class="features-section" id="features">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="section-label">WHY BOT &amp; BOLT</span>
+                <h2 class="section-title">Built for <span class="text-gradient">Everyone</span></h2>
+                <p class="section-sub">Whether you're a seasoned DIYer or fixing your first thing, we've got you
+                    covered.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card feature-large" data-aos="fade-up">
+                    <div class="feature-icon-wrap">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8">
+                            <path
+                                d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+                        </svg>
+                    </div>
+                    <h3>DIY Enthusiasts</h3>
+                    <p>Take your projects to the next level with AI-powered insights. Our platform gives you
+                        professional-grade diagnosis and parts sourcing — the kind of knowledge that used to cost
+                        hundreds.</p>
+                    <div class="feature-tag">Advanced Repairs</div>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon-wrap">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                    </div>
+                    <h3>Eco-Conscious Fixers</h3>
+                    <p>Extend the life of your items and reduce your environmental footprint. Every repair you complete
+                        diverts waste from landfill.</p>
+                    <div class="feature-tag">Sustainability</div>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="150">
+                    <div class="feature-icon-wrap">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                            <path d="M16 3.13a4 4 0 010 7.75" />
+                        </svg>
+                    </div>
+                    <h3>Busy Families</h3>
+                    <p>Finally fix that broken appliance or gadget you've been putting off. Instant answers, no
+                        expertise required — even with kids running around.</p>
+                    <div class="feature-tag">Beginner Friendly</div>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon-wrap">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8">
+                            <line x1="12" y1="1" x2="12" y2="23" />
+                            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                        </svg>
+                    </div>
+                    <h3>Budget Savers</h3>
+                    <p>Stop paying $300 for a 20-minute job. Our AI puts the knowledge of a professional repair tech
+                        directly in your hands — for free.</p>
+                    <div class="feature-tag">Cost Efficient</div>
+                </div>
+
+                <div class="feature-card feature-wide" data-aos="fade-up" data-aos-delay="250">
+                    <div class="feature-icon-wrap">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                            <line x1="8" y1="21" x2="16" y2="21" />
+                            <line x1="12" y1="17" x2="12" y2="21" />
+                        </svg>
+                    </div>
+                    <h3>Comprehensive Parts Database</h3>
+                    <p>Our searchable catalogue covers thousands of appliances, electronics, plumbing, and more. The
+                        exact right part, delivered to your door — no guesswork, no wrong purchases.</p>
+                    <a href="shop.html" class="feature-link">Browse Parts Catalogue →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= ANALYZE SECTION ======= -->
+    <section class="analyze-section" id="analyze">
+        <div class="analyze-glow"></div>
+        <div class="section-container">
+            <div class="analyze-content" data-aos="fade-up">
+                <span class="section-label-light">AI TOOL</span>
+                <h2 class="section-title-light">Try Fix &amp; Analyze — <span>Free</span></h2>
+                <p class="analyze-sub">No account required to try. Upload any image and see our AI in action.</p>
+                <a href="index.html" class="btn-primary-white">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <polygon points="23 7 16 12 23 17 23 7" />
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                    </svg>
+                    Launch Repair AI
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+            <div class="analyze-visual" data-aos="fade-left" data-aos-delay="150">
+                <div class="ai-demo-card">
+                    <div class="ai-demo-header">
+                        <div class="ai-demo-dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <span class="ai-demo-title">Bot &amp; Bolt AI — Active</span>
+                    </div>
+                    <div class="ai-demo-body">
+                        <div class="ai-msg ai-msg-system">
+                            <div class="ai-avatar">AI</div>
+                            <div class="ai-bubble">Analysing image… <span
+                                    class="typing-dots"><span></span><span></span><span></span></span></div>
+                        </div>
+                        <div class="ai-msg ai-msg-system ai-msg-result">
+                            <div class="ai-avatar">AI</div>
+                            <div class="ai-bubble">
+                                <strong>Diagnosis: Washing machine door latch</strong><br />
+                                Issue: Spring mechanism failed. Replacement part: <em>WH01X10310</em><br />
+                                Estimated repair time: 25 minutes<br />
+                                Difficulty: ⭐ Easy
+                            </div>
+                        </div>
+                        <div class="ai-msg ai-msg-user">
+                            <div class="ai-bubble user-bubble">Where do I get the part?</div>
+                        </div>
+                        <div class="ai-msg ai-msg-system">
+                            <div class="ai-avatar">AI</div>
+                            <div class="ai-bubble">Found <strong>3 verified suppliers</strong> for WH01X10310 — from
+                                $8.99 with next-day delivery. <a href="shop.html" style="color: #3e6db4">Shop Parts
+                                    →</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= SUSTAINABILITY SECTION ======= -->
+    <section class="impact-section" id="impact">
+        <div class="section-container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="section-label">OUR MISSION</span>
+                <h2 class="section-title">Ending the <span class="text-gradient">Throw-Away Culture</span></h2>
+                <p class="section-sub">Every year, millions of tons of repairable items end up in landfills simply
+                    because the repair process is too intimidating. At Bot &amp; Bolt, we're changing that.</p>
+            </div>
+
+            <div class="impact-grid">
+                <div class="impact-card" data-aos="fade-up">
+                    <div class="impact-icon">♻️</div>
+                    <div class="impact-number counter-num" data-count="12">0</div>
+                    <div class="impact-unit">K+ Tons</div>
+                    <div class="impact-label">Estimated waste diverted through successful repairs</div>
+                </div>
+                <div class="impact-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="impact-icon">💰</div>
+                    <div class="impact-number counter-num" data-count="4200">0</div>
+                    <div class="impact-unit">/mo avg.</div>
+                    <div class="impact-label">Average dollars saved per active user per month</div>
+                </div>
+                <div class="impact-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="impact-icon">🧠</div>
+                    <div class="impact-number counter-num" data-count="98">0</div>
+                    <div class="impact-unit">%</div>
+                    <div class="impact-label">Success rate on guided repair projects worldwide</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= TESTIMONIALS / CTA ======= -->
+    <section class="cta-section">
+        <div class="section-container">
+            <div class="cta-card" data-aos="fade-up">
+                <div class="cta-glow"></div>
+                <span class="section-label">START TODAY</span>
+                <h2>Ready to Fix Anything?</h2>
+                <p>Join thousands of people saving time, money, and the planet — one repair at a time.</p>
+                <div class="cta-actions">
+                    <a href="index.html" class="btn-primary">Start Diagnosing — It's
+                        Free</a>
+                    <a href="about.html" class="btn-ghost">Learn Our Story</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= FOOTER ======= -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="index.html" class="nav-logo footer-logo">
+                    <img src="logo.png" alt="Bot &amp; Bolt" style="height:50px;width:auto;object-fit:contain;" />
+                </a>
+                <p class="footer-desc">Empowering DIY enthusiasts with AI-powered diagnostics and the right parts for
+                    every job. Fix it yourself, save money, and reduce waste.</p>
+                <div class="footer-social">
+                    <a href="#" class="social-btn" aria-label="Twitter">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+                        </svg>
+                    </a>
+                    <a href="#" class="social-btn" aria-label="LinkedIn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg>
+                    </a>
+                    <a href="#" class="social-btn" aria-label="Instagram">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="index.html">Fix &amp; Analyze</a></li>
+                        <li><a href="shop.html">Shop Parts</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 Botnbolt Technologies Inc. All rights reserved.</p>
+            <p>Designed for DIYers around the world. 🌍</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function handleHeroUpload(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const uploadArea = document.getElementById('heroUpload');
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imgSrc = e.target.result;
+
+                // ── Phase 1: Processing spinner ──
+                uploadArea.onclick = null; // disable re-click while processing
+                uploadArea.style.cursor = 'default';
+                uploadArea.innerHTML = `
+                  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:40px 24px;min-height:220px;">
+                    <!-- Thumbnail -->
+                    <div style="width:72px;height:72px;border-radius:14px;overflow:hidden;border:2px solid rgba(147,125,186,0.25);box-shadow:0 4px 14px rgba(62,109,180,0.15);flex-shrink:0">
+                      <img src="${imgSrc}" style="width:100%;height:100%;object-fit:cover"/>
+                    </div>
+                    <!-- Spinner -->
+                    <div id="uploadSpinner" style="width:44px;height:44px;border-radius:50%;border:3px solid rgba(147,125,186,0.2);border-top-color:#3e6db4;animation:spin 0.9s linear infinite"></div>
+                    <div>
+                      <div id="uploadStatusTitle" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text-primary);text-align:center;margin-bottom:4px">Processing…</div>
+                      <div id="uploadStatusSub" style="font-size:0.8rem;color:var(--text-muted);text-align:center">Uploading your image</div>
+                    </div>
+                    <!-- Step indicators -->
+                    <div style="display:flex;flex-direction:column;gap:7px;width:100%;max-width:240px">
+                      <div id="step1" class="proc-step" style="display:flex;align-items:center;gap:9px;font-size:0.78rem;color:var(--text-muted);opacity:0.4">
+                        <span class="step-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(147,125,186,0.3);flex-shrink:0"></span>Uploading image
+                      </div>
+                      <div id="step2" class="proc-step" style="display:flex;align-items:center;gap:9px;font-size:0.78rem;color:var(--text-muted);opacity:0.4">
+                        <span class="step-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(147,125,186,0.3);flex-shrink:0"></span>Running AI diagnosis
+                      </div>
+                      <div id="step3" class="proc-step" style="display:flex;align-items:center;gap:9px;font-size:0.78rem;color:var(--text-muted);opacity:0.4">
+                        <span class="step-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(147,125,186,0.3);flex-shrink:0"></span>Matching parts catalogue
+                      </div>
+                      <div id="step4" class="proc-step" style="display:flex;align-items:center;gap:9px;font-size:0.78rem;color:var(--text-muted);opacity:0.4">
+                        <span class="step-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(147,125,186,0.3);flex-shrink:0"></span>Generating repair guide
+                      </div>
+                    </div>
+                  </div>`;
+
+                // ── Animate steps ──
+                const steps = [
+                    { id: 'step1', sub: 'Uploading image…', delay: 400 },
+                    { id: 'step2', sub: 'Running AI diagnosis…', delay: 1400 },
+                    { id: 'step3', sub: 'Matching parts catalogue…', delay: 2600 },
+                    { id: 'step4', sub: 'Generating repair guide…', delay: 3600 },
+                ];
+                steps.forEach(({ id, sub, delay }) => {
+                    setTimeout(() => {
+                        const el = document.getElementById(id);
+                        if (!el) return;
+                        el.style.opacity = '1';
+                        el.style.color = 'var(--primary)';
+                        el.querySelector('.step-dot').style.background = 'var(--gradient-main)';
+                        const subEl = document.getElementById('uploadStatusSub');
+                        if (subEl) subEl.textContent = sub;
+                    }, delay);
+                });
+
+                // ── Phase 2: Mock result card ──
+                setTimeout(() => {
+                    uploadArea.onclick = null;
+                    uploadArea.style.cursor = 'default';
+                    uploadArea.innerHTML = `
+                      <div style="padding:24px;width:100%">
+                        <!-- Success header -->
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+                          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                          </div>
+                          <div>
+                            <div style="font-size:0.82rem;font-weight:700;color:#16a34a">AI Diagnosis Complete</div>
+                            <div style="font-size:0.72rem;color:var(--text-muted)">Analysed in 4.2s</div>
+                          </div>
+                          <img src="${imgSrc}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;margin-left:auto;border:1.5px solid rgba(147,125,186,0.2)"/>
+                        </div>
+
+                        <!-- Result content -->
+                        <div style="background:var(--gradient-soft);border-radius:12px;padding:14px 16px;margin-bottom:12px;border:1px solid rgba(147,125,186,0.15)">
+                          <div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Diagnosis</div>
+                          <div style="font-size:0.92rem;font-weight:700;color:var(--text-primary);margin-bottom:4px">Washing Machine Door Latch</div>
+                          <div style="font-size:0.8rem;color:var(--text-muted)">Spring mechanism failure — moderate wear confirmed</div>
+                        </div>
+
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+                          <div style="background:white;border:1px solid rgba(147,125,186,0.15);border-radius:10px;padding:10px 12px">
+                            <div style="font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Part No.</div>
+                            <div style="font-size:0.85rem;font-weight:700;color:var(--primary);font-family:'DM Sans',sans-serif">WH01X10310</div>
+                          </div>
+                          <div style="background:white;border:1px solid rgba(147,125,186,0.15);border-radius:10px;padding:10px 12px">
+                            <div style="font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Est. Fix Time</div>
+                            <div style="font-size:0.85rem;font-weight:700;color:var(--text-primary)">~25 min ⭐ Easy</div>
+                          </div>
+                        </div>
+
+                        <div style="display:flex;gap:8px">
+                          <a href="repair-guide.html" style="flex:1;padding:10px;background:var(--gradient-main);color:white;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;display:inline-block">View Repair Guide →</a>
+                          <button onclick="resetUpload()" style="padding:10px 14px;background:white;border:1.5px solid rgba(147,125,186,0.25);border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;color:var(--text-muted)">New Photo</button>
+                        </div>
+                      </div>`;
+
+                    // Also update history
+                    const historyEmpty = document.querySelector('.history-empty');
+                    if (historyEmpty) {
+                        historyEmpty.innerHTML = `
+                          <div style="display:flex;align-items:center;gap:10px;padding:8px 0">
+                            <img src="${imgSrc}" style="width:36px;height:36px;border-radius:8px;object-fit:cover;border:1px solid rgba(147,125,186,0.2)"/>
+                            <div>
+                              <div style="font-size:0.82rem;font-weight:700;color:var(--text-primary)">${file.name}</div>
+                              <div style="font-size:0.75rem;color:#16a34a;font-weight:600">✓ Diagnosis ready</div>
+                            </div>
+                          </div>`;
+                    }
+                }, 4800);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resetUpload() {
+            const uploadArea = document.getElementById('heroUpload');
+            uploadArea.style.cursor = 'pointer';
+            uploadArea.innerHTML = `
+              <div class="upload-icon-wrap">
+                <div class="upload-icon-ring"></div>
+                <svg class="upload-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#uploadGrad)" stroke-width="1.5">
+                  <rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                  <defs><linearGradient id="uploadGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#3e6db4"/><stop offset="100%" stop-color="#937dba"/></linearGradient></defs>
+                </svg>
+              </div>
+              <p class="upload-title" id="heroUploadTitle">Upload Photo</p>
+              <p class="upload-sub" id="heroUploadSub">Drag &amp; drop or click to scan<br/>your broken item</p>
+              <div class="upload-tags">
+                <span class="upload-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>AI DIAGNOSIS</span>
+                <span class="upload-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>ANY FORMAT</span>
+              </div>`;
+            uploadArea.onclick = () => document.getElementById('heroFileInput').click();
+            // Reset file input so same file can be re-uploaded
+            document.getElementById('heroFileInput').value = '';
+        }
+
+        // Update cart count from localStorage
+        const cartItems = JSON.parse(localStorage.getItem('bnb_cart') || '[]');
+        const cartBadge = document.getElementById('cartCount');
+        if (cartBadge && cartItems.length) cartBadge.textContent = cartItems.length;
+    </script>
+</body>
+
+</html>

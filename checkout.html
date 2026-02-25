@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout — Bot &amp; Bolt</title>
+    <meta name="description" content="Secure checkout for Bot &amp; Bolt parts orders." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* ── Page layout ── */
+        .co-page {
+            min-height: 100vh;
+            background: var(--bg);
+            padding-top: var(--nav-height);
+        }
+
+        .co-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 36px;
+            align-items: start;
+        }
+
+        /* ── Progress bar ── */
+        .co-progress {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 32px;
+            grid-column: 1 / -1;
+        }
+
+        .co-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .co-step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            transition: all .3s;
+            border: 2px solid rgba(147, 125, 186, 0.25);
+            color: var(--text-muted);
+            background: white;
+        }
+
+        .co-step.active .co-step-num {
+            background: var(--gradient-main);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 14px rgba(62, 109, 180, 0.35);
+        }
+
+        .co-step.done .co-step-num {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #16a34a;
+        }
+
+        .co-step-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: color .3s;
+        }
+
+        .co-step.active .co-step-label {
+            color: var(--primary);
+        }
+
+        .co-step.done .co-step-label {
+            color: #16a34a;
+        }
+
+        .co-step-line {
+            flex: 1;
+            height: 2px;
+            background: rgba(147, 125, 186, 0.15);
+            margin: 0 12px;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .co-step-line.done::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+        }
+
+        /* ── Form card ── */
+        .co-form-card {
+            background: white;
+            border: 1px solid rgba(147, 125, 186, 0.12);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .co-form-header {
+            padding: 22px 28px;
+            border-bottom: 1px solid rgba(147, 125, 186, 0.1);
+            background: var(--gradient-soft);
+        }
+
+        .co-form-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .co-form-sub {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .co-form-body {
+            padding: 28px;
+        }
+
+        /* ── Form grid ── */
+        .co-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .co-grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        .co-grid.three {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .co-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .co-group.span2 {
+            grid-column: 1 / -1;
+        }
+
+        .co-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: var(--text-secondary);
+        }
+
+        .co-input {
+            padding: 12px 14px;
+            border: 1.5px solid rgba(147, 125, 186, 0.2);
+            border-radius: var(--radius-sm);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            background: var(--bg);
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .co-input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(147, 125, 186, 0.1);
+        }
+
+        .co-input.card-input {
+            font-family: 'DM Sans', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── Section divider ── */
+        .co-section-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--secondary);
+            margin: 24px 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .co-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(147, 125, 186, 0.12);
+        }
+
+        /* ── Card icons row ── */
+        .co-card-icons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .co-card-icon {
+            height: 26px;
+            border: 1px solid rgba(147, 125, 186, 0.15);
+            border-radius: 6px;
+            padding: 3px 8px;
+            background: white;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── Next / Back buttons ── */
+        .co-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            align-items: center;
+        }
+
+        .co-btn-primary {
+            flex: 1;
+            padding: 15px 24px;
+            background: var(--gradient-main);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .co-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(62, 109, 180, 0.35);
+        }
+
+        .co-btn-back {
+            padding: 15px 20px;
+            background: none;
+            border: 1.5px solid rgba(147, 125, 186, 0.25);
+            border-radius: var(--radius-md);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .co-btn-back:hover {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .co-secure-note {
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        /* ── Panel visibility ── */
+        .co-panel {
+            display: none;
+        }
+
+        .co-panel.active {
+            display: block;
+        }
+
+        /* ── Order summary sidebar ── */
+        .co-summary {
+            position: sticky;
+            top: calc(var(--nav-height) + 20px);
+        }
+
+        .co-summary-card {
+            background: white;
+            border: 1px solid rgba(147, 125, 186, 0.12);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .co-summary-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid rgba(147, 125, 186, 0.1);
+            background: var(--gradient-soft);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .co-summary-items {
+            padding: 14px 22px;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .co-summary-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(147, 125, 186, 0.07);
+        }
+
+        .co-summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .co-item-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--gradient-soft);
+            border: 1px solid rgba(147, 125, 186, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .co-item-qty {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            font-size: 0.58rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .co-item-name {
+            flex: 1;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.35;
+        }
+
+        .co-item-price {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .co-summary-totals {
+            padding: 14px 22px;
+            border-top: 1px solid rgba(147, 125, 186, 0.1);
+        }
+
+        .co-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 0;
+            font-size: 0.85rem;
+        }
+
+        .co-total-label {
+            color: var(--text-muted);
+        }
+
+        .co-total-value {
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .co-total-row.grand {
+            padding-top: 14px;
+            margin-top: 6px;
+            border-top: 2px solid rgba(147, 125, 186, 0.12);
+        }
+
+        .co-total-row.grand .co-total-label {
+            font-size: 1rem;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            color: var(--text-primary);
+        }
+
+        .co-total-row.grand .co-total-value {
+            font-size: 1.3rem;
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+        }
+
+        /* ── Promo tag in summary ── */
+        .co-promo-tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #16a34a;
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: var(--radius-pill);
+            padding: 4px 10px;
+        }
+
+        /* ── Confirmation panel ── */
+        .co-success {
+            text-align: center;
+            padding: 40px 28px 36px;
+        }
+
+        .co-success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.35);
+            animation: popIn .5s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .co-success-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .co-success-sub {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+            max-width: 380px;
+            margin: 0 auto 28px;
+        }
+
+        .co-order-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--gradient-soft);
+            border: 1px solid rgba(147, 125, 186, 0.2);
+            border-radius: var(--radius-pill);
+            padding: 10px 20px;
+            font-family: 'DM Sans', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+
+        .co-success-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .co-success-actions a {
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .co-success-actions .btn-primary-link {
+            background: var(--gradient-main);
+            color: white;
+        }
+
+        .co-success-actions .btn-primary-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(62, 109, 180, 0.35);
+        }
+
+        .co-success-actions .btn-outline-link {
+            border: 1.5px solid rgba(147, 125, 186, 0.25);
+            color: var(--text-secondary);
+        }
+
+        .co-success-actions .btn-outline-link:hover {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        /* ── Trust badges ── */
+        .co-trust {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 18px 22px;
+            border-top: 1px solid rgba(147, 125, 186, 0.08);
+        }
+
+        .co-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .co-trust-item svg {
+            color: var(--primary);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .co-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .co-summary {
+                position: static;
+                order: -1;
+            }
+
+            .co-progress {
+                gap: 0;
+            }
+
+            .co-step-label {
+                display: none;
+            }
+
+            .co-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .co-grid.three {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <!-- Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="logo.png" alt="Bot &amp; Bolt" style="height:56px;width:auto;object-fit:contain;" />
+            </a>
+            <nav class="nav-links">
+                <a href="shop.html" class="nav-link nav-cta-secondary">Shop Parts</a>
+                <a href="cart.html" class="nav-link">← Back to Cart</a>
+            </nav>
+            <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="shop.html" class="mobile-link">Shop Parts</a>
+        <a href="cart.html" class="mobile-link">← Back to Cart</a>
+    </div>
+
+    <div class="co-page">
+        <div class="co-inner">
+
+            <!-- Progress indicator -->
+            <div class="co-progress" id="coProgress">
+                <div class="co-step active" id="step1">
+                    <div class="co-step-num">1</div>
+                    <div class="co-step-label">Delivery</div>
+                </div>
+                <div class="co-step-line" id="line1"></div>
+                <div class="co-step" id="step2">
+                    <div class="co-step-num">2</div>
+                    <div class="co-step-label">Payment</div>
+                </div>
+                <div class="co-step-line" id="line2"></div>
+                <div class="co-step" id="step3">
+                    <div class="co-step-num">✓</div>
+                    <div class="co-step-label">Confirmed</div>
+                </div>
+            </div>
+
+            <!-- ===== LEFT: Form ===== -->
+            <div>
+
+                <!-- STEP 1: Delivery -->
+                <div class="co-form-card co-panel active" id="panel1">
+                    <div class="co-form-header">
+                        <div class="co-form-title">Delivery Information</div>
+                        <div class="co-form-sub">Where should we send your parts?</div>
+                    </div>
+                    <div class="co-form-body">
+                        <div class="co-section-title">Contact Details</div>
+                        <div class="co-grid">
+                            <div class="co-group">
+                                <label class="co-label">First Name</label>
+                                <input type="text" class="co-input" id="d_first" placeholder="John" />
+                            </div>
+                            <div class="co-group">
+                                <label class="co-label">Last Name</label>
+                                <input type="text" class="co-input" id="d_last" placeholder="Doe" />
+                            </div>
+                            <div class="co-group">
+                                <label class="co-label">Email Address</label>
+                                <input type="email" class="co-input" id="d_email" placeholder="you@example.com" />
+                            </div>
+                            <div class="co-group">
+                                <label class="co-label">Phone</label>
+                                <input type="tel" class="co-input" id="d_phone" placeholder="+1 (555) 000-0000" />
+                            </div>
+                        </div>
+
+                        <div class="co-section-title">Delivery Address</div>
+                        <div class="co-grid full">
+                            <div class="co-group">
+                                <label class="co-label">Street Address</label>
+                                <input type="text" class="co-input" id="d_street"
+                                    placeholder="123 Main Street, Apt 4B" />
+                            </div>
+                        </div>
+                        <div class="co-grid">
+                            <div class="co-group">
+                                <label class="co-label">City</label>
+                                <input type="text" class="co-input" id="d_city" placeholder="New York" />
+                            </div>
+                            <div class="co-group">
+                                <label class="co-label">State &amp; ZIP</label>
+                                <input type="text" class="co-input" id="d_zip" placeholder="NY 10001" />
+                            </div>
+                            <div class="co-group">
+                                <label class="co-label">Country</label>
+                                <input type="text" class="co-input" id="d_country" placeholder="United States" />
+                            </div>
+                            <div class="co-group">
+                                <label class="co-label">Delivery Method</label>
+                                <select class="co-input" id="d_method">
+                                    <option value="free">Standard · Free · 3–5 days</option>
+                                    <option value="express">Express · $9.99 · Next day</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="co-actions">
+                            <button class="co-btn-primary" onclick="goStep2()">
+                                Continue to Payment
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <polyline points="9 18 15 12 9 6" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="co-secure-note">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                            Secure checkout · SSL encrypted
+                        </p>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Payment -->
+                <div class="co-form-card co-panel" id="panel2">
+                    <div class="co-form-header">
+                        <div class="co-form-title">Payment Details</div>
+                        <div class="co-form-sub">Your card information is encrypted and never stored.</div>
+                    </div>
+                    <div class="co-form-body">
+                        <div class="co-card-icons">
+                            <div class="co-card-icon" style="color:#1a1f71;font-weight:900">VISA</div>
+                            <div class="co-card-icon" style="color:#eb001b">MC</div>
+                            <div class="co-card-icon" style="color:#2e77bc">AMEX</div>
+                            <div class="co-card-icon" style="color:#ff6600">DISC</div>
+                        </div>
+
+                        <div class="co-section-title">Card Information</div>
+                        <div class="co-grid full">
+                            <div class="co-group">
+                                <label class="co-label">Cardholder Name</label>
+                                <input type="text" class="co-input" id="p_name" placeholder="John Doe" />
+                            </div>
+                            <div class="co-group">
+                                <label class="co-label">Card Number</label>
+                                <input type="text" class="co-input card-input" id="p_card"
+                                    placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)" />
+                            </div>
+                        </div>
+                        <div class="co-grid three">
+                            <div class="co-group">
+                                <label class="co-label">Expiry Month</label>
+                                <input type="text" class="co-input" id="p_month" placeholder="MM" maxlength="2" />
+                            </div>
+                            <div class="co-group">
+                                <label class="co-label">Expiry Year</label>
+                                <input type="text" class="co-input" id="p_year" placeholder="YY" maxlength="2" />
+                            </div>
+                            <div class="co-group">
+                                <label class="co-label">CVV</label>
+                                <input type="password" class="co-input" id="p_cvv" placeholder="•••" maxlength="4" />
+                            </div>
+                        </div>
+
+                        <div class="co-section-title">Billing Address</div>
+                        <div class="co-grid full" style="margin-bottom:6px">
+                            <div class="co-group">
+                                <label
+                                    style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.88rem;color:var(--text-secondary);font-weight:500">
+                                    <input type="checkbox" id="billSame" checked onchange="toggleBilling()"
+                                        style="width:16px;height:16px;accent-color:var(--primary)" />
+                                    Same as delivery address
+                                </label>
+                            </div>
+                        </div>
+                        <div id="billingFields" style="display:none">
+                            <div class="co-grid full">
+                                <div class="co-group">
+                                    <label class="co-label">Street Address</label>
+                                    <input type="text" class="co-input" id="b_street" placeholder="123 Main Street" />
+                                </div>
+                            </div>
+                            <div class="co-grid">
+                                <div class="co-group">
+                                    <label class="co-label">City</label>
+                                    <input type="text" class="co-input" id="b_city" placeholder="New York" />
+                                </div>
+                                <div class="co-group">
+                                    <label class="co-label">State &amp; ZIP</label>
+                                    <input type="text" class="co-input" id="b_zip" placeholder="NY 10001" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="co-actions">
+                            <button class="co-btn-back" onclick="goStep(1)">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <polyline points="15 18 9 12 15 6" />
+                                </svg>
+                                Back
+                            </button>
+                            <button class="co-btn-primary" onclick="placeOrder()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                    <path d="M7 11V7a5 5 0 0110 0v4" />
+                                </svg>
+                                Place Order
+                            </button>
+                        </div>
+                        <p class="co-secure-note">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                            256-bit SSL encryption · PCI DSS compliant
+                        </p>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Confirmation -->
+                <div class="co-form-card co-panel" id="panel3">
+                    <div class="co-success">
+                        <div class="co-success-icon">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        </div>
+                        <div class="co-success-title">Order Confirmed! 🎉</div>
+                        <p class="co-success-sub">Thank you for your order. We'll send a confirmation email shortly and
+                            notify you when your parts are on the way.</p>
+                        <div class="co-order-chip">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                                <line x1="3" y1="6" x2="21" y2="6" />
+                                <path d="M16 10a4 4 0 01-8 0" />
+                            </svg>
+                            Order # <span id="confirmOrderId">BNB-2026-0000</span>
+                        </div>
+                        <div class="co-success-actions">
+                            <a href="profile.html?tab=orders" class="btn-primary-link">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                                    <line x1="3" y1="6" x2="21" y2="6" />
+                                    <path d="M16 10a4 4 0 01-8 0" />
+                                </svg>
+                                View My Orders
+                            </a>
+                            <a href="shop.html" class="btn-outline-link">Shop More Parts</a>
+                            <a href="index.html" class="btn-outline-link">Back to Home</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ===== RIGHT: Order Summary ===== -->
+            <div class="co-summary">
+                <div class="co-summary-card">
+                    <div class="co-summary-header">Order Summary</div>
+                    <div class="co-summary-items" id="summaryItems">
+                        <!-- populated by JS -->
+                    </div>
+                    <div class="co-summary-totals">
+                        <div class="co-total-row">
+                            <span class="co-total-label">Subtotal</span>
+                            <span class="co-total-value" id="sumSubtotal">$0.00</span>
+                        </div>
+                        <div class="co-total-row" id="sumDeliveryRow">
+                            <span class="co-total-label">Delivery</span>
+                            <span class="co-total-value" id="sumDelivery">Free</span>
+                        </div>
+                        <div class="co-total-row" id="sumDiscountRow" style="display:none">
+                            <span class="co-total-label">Discount</span>
+                            <span class="co-total-value" id="sumDiscount" style="color:#16a34a">–$0.00</span>
+                        </div>
+                        <div class="co-total-row">
+                            <span class="co-total-label">Tax (8%)</span>
+                            <span class="co-total-value" id="sumTax">$0.00</span>
+                        </div>
+                        <div class="co-total-row grand">
+                            <span class="co-total-label">Total</span>
+                            <span class="co-total-value" id="sumTotal">$0.00</span>
+                        </div>
+                    </div>
+                    <!-- Trust badges -->
+                    <div class="co-trust">
+                        <div class="co-trust-item">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                            Secure
+                        </div>
+                        <div class="co-trust-item">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                <polyline points="9 22 9 12 15 12 15 22" />
+                            </svg>
+                            Free Returns
+                        </div>
+                        <div class="co-trust-item">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            Fast Delivery
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        /* ── Load cart ── */
+        const cart = JSON.parse(localStorage.getItem('bnb_cart') || '[]');
+        const promoDiscount = parseFloat(sessionStorage.getItem('bnb_promo_discount') || '0');
+
+        if (!cart.length) window.location.href = 'cart.html';
+
+        /* ── Populate summary ── */
+        const emojis = ['🔧', '🔩', '⚙️', '🪛', '🔌', '🧤', '💡', '🛠️', '🪚', '🔋'];
+        function renderSummary() {
+            const itemsEl = document.getElementById('summaryItems');
+            itemsEl.innerHTML = cart.map((item, i) => `
+                <div class="co-summary-item">
+                    <div class="co-item-badge">
+                        ${emojis[i % emojis.length]}
+                        <div class="co-item-qty">${item.qty}</div>
+                    </div>
+                    <div class="co-item-name">${item.name}</div>
+                    <div class="co-item-price">$${(item.price * item.qty).toFixed(2)}</div>
+                </div>`).join('');
+
+            const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            const delivery = document.getElementById('d_method')?.value === 'express' ? 9.99 : 0;
+            const discount = promoDiscount;
+            const tax = (subtotal - discount + delivery) * 0.08;
+            const total = subtotal - discount + delivery + tax;
+
+            document.getElementById('sumSubtotal').textContent = '$' + subtotal.toFixed(2);
+            document.getElementById('sumDelivery').textContent = delivery ? '$' + delivery.toFixed(2) : 'Free';
+            document.getElementById('sumTax').textContent = '$' + tax.toFixed(2);
+            document.getElementById('sumTotal').textContent = '$' + total.toFixed(2);
+
+            if (discount > 0) {
+                document.getElementById('sumDiscountRow').style.display = '';
+                document.getElementById('sumDiscount').textContent = '–$' + discount.toFixed(2);
+            }
+        }
+        renderSummary();
+
+        // Re-calculate when delivery method changes
+        document.getElementById('d_method')?.addEventListener('change', renderSummary);
+
+        /* ── Auto-fill from saved profile ── */
+        const user = JSON.parse(localStorage.getItem('bnb_user') || 'null');
+        const profile = JSON.parse(localStorage.getItem('bnb_profile') || '{}');
+        if (user) {
+            const parts = (user.name || '').split(' ');
+            if (document.getElementById('d_first')) document.getElementById('d_first').value = parts[0] || '';
+            if (document.getElementById('d_last')) document.getElementById('d_last').value = parts.slice(1).join(' ') || '';
+            if (document.getElementById('d_email')) document.getElementById('d_email').value = user.email || '';
+            if (document.getElementById('d_phone')) document.getElementById('d_phone').value = profile.phone || '';
+            if (document.getElementById('d_street')) document.getElementById('d_street').value = profile.street || '';
+            if (document.getElementById('d_city')) document.getElementById('d_city').value = profile.city || '';
+            if (document.getElementById('d_zip')) document.getElementById('d_zip').value = profile.zip || '';
+            if (document.getElementById('d_country')) document.getElementById('d_country').value = profile.country || '';
+            if (document.getElementById('p_name')) document.getElementById('p_name').value = user.name || '';
+        }
+
+        /* ── Step navigation ── */
+        let currentStep = 1;
+        function goStep(n) {
+            document.querySelectorAll('.co-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel' + n).classList.add('active');
+            currentStep = n;
+
+            // Update progress
+            [1, 2, 3].forEach(i => {
+                const el = document.getElementById('step' + i);
+                el.classList.remove('active', 'done');
+                if (i < n) el.classList.add('done');
+                else if (i === n) el.classList.add('active');
+            });
+            [1, 2].forEach(i => {
+                const line = document.getElementById('line' + i);
+                line.classList.toggle('done', i < n);
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goStep2() {
+            const first = document.getElementById('d_first').value.trim();
+            const email = document.getElementById('d_email').value.trim();
+            const street = document.getElementById('d_street').value.trim();
+            if (!first || !email || !street) {
+                highlight(['d_first', 'd_email', 'd_street'], first, email, street);
+                return;
+            }
+            goStep(2);
+        }
+
+        function highlight(ids, ...vals) {
+            ids.forEach((id, i) => {
+                const el = document.getElementById(id);
+                if (!vals[i]) {
+                    el.style.borderColor = '#ef4444';
+                    el.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.1)';
+                    el.addEventListener('input', () => {
+                        el.style.borderColor = '';
+                        el.style.boxShadow = '';
+                    }, { once: true });
+                }
+            });
+        }
+
+        function placeOrder() {
+            const card = document.getElementById('p_card').value.replace(/\s/g, '');
+            const cvv = document.getElementById('p_cvv').value;
+            const month = document.getElementById('p_month').value;
+            const year = document.getElementById('p_year').value;
+            if (card.length < 15 || cvv.length < 3 || !month || !year) {
+                ['p_card', 'p_cvv', 'p_month', 'p_year'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el.value.trim()) {
+                        el.style.borderColor = '#ef4444';
+                        el.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.1)';
+                        el.addEventListener('input', () => { el.style.borderColor = ''; el.style.boxShadow = ''; }, { once: true });
+                    }
+                });
+                return;
+            }
+
+            // Generate order ID
+            const orderId = 'BNB-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+            document.getElementById('confirmOrderId').textContent = orderId;
+
+            // Save order to localStorage
+            const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            const delivery = document.getElementById('d_method').value === 'express' ? 9.99 : 0;
+            const discount = promoDiscount;
+            const tax = (subtotal - discount + delivery) * 0.08;
+            const total = subtotal - discount + delivery + tax;
+
+            const newOrder = {
+                id: orderId,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                status: 'processing',
+                items: cart.map(i => ({ icon: '🔧', name: i.name, qty: i.qty, price: '$' + (i.price * i.qty).toFixed(2) })),
+                total: '$' + total.toFixed(2)
+            };
+            const existing = JSON.parse(localStorage.getItem('bnb_orders') || '[]');
+            existing.unshift(newOrder);
+            localStorage.setItem('bnb_orders', JSON.stringify(existing));
+
+            // Clear cart
+            localStorage.removeItem('bnb_cart');
+            sessionStorage.removeItem('bnb_promo_discount');
+
+            goStep(3);
+        }
+
+        /* ── Billing toggle ── */
+        function toggleBilling() {
+            document.getElementById('billingFields').style.display =
+                document.getElementById('billSame').checked ? 'none' : '';
+        }
+
+        /* ── Card number formatter ── */
+        function formatCard(el) {
+            let v = el.value.replace(/\D/g, '').substring(0, 16);
+            el.value = v.replace(/(.{4})/g, '$1 ').trim();
+        }
+    </script>
+</body>
+
+</html>

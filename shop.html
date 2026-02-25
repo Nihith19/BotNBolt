@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop Parts — Bot & Bolt | Find Exact Replacement Parts</title>
+    <meta name="description"
+        content="Browse our comprehensive parts catalogue. Find exact replacement parts for appliances, electronics, plumbing & more. AI-matched to your repair needs." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .shop-hero {
+            padding: calc(var(--nav-height) + 60px) 0 60px;
+            background: var(--gradient-hero);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shop-hero-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .shop-header-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .shop-search-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            margin-top: 28px;
+        }
+
+        .shop-search-wrap input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            border-radius: var(--radius-pill);
+            border: 1.5px solid rgba(147, 125, 186, 0.25);
+            background: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .shop-search-wrap input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(147, 125, 186, 0.12);
+        }
+
+        .shop-search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        /* Category filters */
+        .category-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+        }
+
+        .cat-btn {
+            padding: 8px 20px;
+            border-radius: var(--radius-pill);
+            border: 1.5px solid rgba(147, 125, 186, 0.2);
+            background: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .cat-btn:hover,
+        .cat-btn.active {
+            background: var(--gradient-main);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 16px rgba(62, 109, 180, 0.3);
+        }
+
+        /* Parts grid */
+        .parts-section {
+            background: var(--bg);
+        }
+
+        .parts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(252px, 1fr));
+            gap: 20px;
+        }
+
+        .part-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(147, 125, 186, 0.1);
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .part-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(147, 125, 186, 0.25);
+        }
+
+        .part-img {
+            height: 160px;
+            background: var(--gradient-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .part-img-icon {
+            font-size: 3.5rem;
+            opacity: 0.6;
+        }
+
+        .part-cat-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--secondary);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3px 10px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(147, 125, 186, 0.2);
+        }
+
+        .part-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .part-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .part-model {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+            margin-bottom: 12px;
+        }
+
+        .part-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: auto;
+            margin-bottom: 14px;
+        }
+
+        .part-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .part-btn-cart {
+            flex: 1;
+            padding: 10px;
+            background: var(--gradient-main);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .part-btn-cart:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .part-btn-save {
+            width: 38px;
+            background: var(--bg);
+            border: 1.5px solid rgba(147, 125, 186, 0.2);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .part-btn-save:hover {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        /* AI search banner */
+        .ai-search-banner {
+            background: var(--gradient-main);
+            border-radius: var(--radius-lg);
+            padding: 32px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .ai-search-text h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .ai-search-text p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        @media (max-width: 600px) {
+            .parts-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .shop-header-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .parts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <!-- Navigation -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="logo.png" alt="Bot &amp; Bolt" style="height:56px;width:auto;object-fit:contain;" />
+            </a>
+            <nav class="nav-links">
+                <a href="shop.html" class="nav-link" style="color:var(--primary);font-weight:700">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                    Shop Parts
+                </a>
+                <a href="index.html#home" class="nav-link nav-cta">Fix &amp; Analyze</a>
+                <a href="login.html" class="nav-btn-outline">Sign In</a>
+                <a href="cart.html" class="nav-cart" aria-label="Cart">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.98-1.72L23 6H6" />
+                    </svg>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </a>
+            </nav>
+            <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="shop.html" class="mobile-link">Shop Parts</a>
+        <a href="index.html#home" class="mobile-link mobile-link-primary">Fix &amp; Analyze</a>
+        <a href="login.html" class="mobile-link">Sign In</a>
+    </div>
+
+    <!-- Shop Hero -->
+    <section class="shop-hero">
+        <div class="shop-hero-inner">
+            <div class="shop-header-row">
+                <div>
+                    <span class="section-label" data-aos="fade-up">PARTS CATALOGUE</span>
+                    <h1 class="section-title" data-aos="fade-up" data-aos-delay="50">
+                        Find the <span class="text-gradient">Exact Part</span> You Need
+                    </h1>
+                    <p class="section-sub" data-aos="fade-up" data-aos-delay="100" style="margin-bottom:0">
+                        Thousands of genuine replacement parts for appliances, electronics, plumbing, and more.
+                        AI-matched to your diagnosis.
+                    </p>
+                </div>
+            </div>
+            <div class="shop-search-wrap" data-aos="fade-up" data-aos-delay="150">
+                <svg class="shop-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="M21 21l-4.35-4.35" />
+                </svg>
+                <input type="text" id="partsSearch" placeholder="Search by part name, model number, or appliance type…"
+                    oninput="filterParts(this.value)" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Parts section -->
+    <section class="parts-section">
+        <div class="section-container" style="padding-top:60px;padding-bottom:80px">
+
+            <!-- AI Banner -->
+            <div class="ai-search-banner" data-aos="fade-up">
+                <div class="ai-search-text">
+                    <h3>🤖 Don't know the part number?</h3>
+                    <p>Use Fix &amp; Analyze — take a photo and our AI will identify the exact part you need.</p>
+                </div>
+                <a href="index.html" class="btn-primary-white">
+                    Find My Part with AI
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Category filters -->
+            <div class="category-filters" data-aos="fade-up">
+                <button class="cat-btn active" onclick="filterCat(this,'all')">All Parts</button>
+                <button class="cat-btn" onclick="filterCat(this,'appliances')">Appliances</button>
+                <button class="cat-btn" onclick="filterCat(this,'plumbing')">Plumbing</button>
+                <button class="cat-btn" onclick="filterCat(this,'electronics')">Electronics</button>
+                <button class="cat-btn" onclick="filterCat(this,'cleaning')">Cleaning</button>
+                <button class="cat-btn" onclick="filterCat(this,'tools')">Power Tools</button>
+                <button class="cat-btn" onclick="filterCat(this,'hvac')">HVAC</button>
+            </div>
+
+            <!-- Parts grid -->
+            <div class="parts-grid" id="partsGrid">
+                <!-- Parts populated by JS -->
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="section-container">
+            <div class="cta-card" data-aos="fade-up">
+                <div class="cta-glow"></div>
+                <span class="section-label">AI-POWERED</span>
+                <h2>Can't Find the Right Part?</h2>
+                <p>Upload a photo of your broken item and our AI will identify the exact part number and find the best
+                    supplier.</p>
+                <div class="cta-actions">
+                    <a href="index.html" class="btn-primary">Try Fix &amp; Analyze —
+                        Free</a>
+                    <a href="contact.html" class="btn-ghost">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="index.html" class="nav-logo footer-logo">
+                    <img src="logo.png" alt="Bot &amp; Bolt" style="height:50px;width:auto;object-fit:contain;" />
+                </a>
+                <p class="footer-desc">Empowering DIY enthusiasts with AI-powered diagnostics and the right parts for
+                    every job.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="index.html">Fix &amp; Analyze</a></li>
+                        <li><a href="shop.html">Shop Parts</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Botnbolt Technologies Inc. All rights reserved.</p>
+            <p>Designed for DIYers around the world. 🌍</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        const partsData = [
+            { id: 1, name: 'Washing Machine Door Latch', model: 'WH01X10310', price: '$8.99', old: '$14.99', cat: 'appliances', icon: '🫧', tag: 'Appliances', delivery: 'Next-day' },
+            { id: 2, name: 'Refrigerator Water Filter', model: 'MWF-GE-GENUINE', price: '$18.49', old: '$24.99', cat: 'appliances', icon: '🧊', tag: 'Appliances', delivery: '2-3 days' },
+            { id: 3, name: 'Dishwasher Spray Arm', model: 'WD01X24756', price: '$24.99', old: '$34.99', cat: 'appliances', icon: '🍽️', tag: 'Appliances', delivery: 'Next-day' },
+            { id: 4, name: 'Bathroom Faucet Cartridge', model: 'RP46074', price: '$14.79', old: '$22.00', cat: 'plumbing', icon: '🚿', tag: 'Plumbing', delivery: 'Next-day' },
+            { id: 5, name: 'Toilet Fill Valve Kit', model: 'B&T-400A', price: '$11.29', old: '$18.00', cat: 'plumbing', icon: '🚽', tag: 'Plumbing', delivery: '2-3 days' },
+            { id: 6, name: 'Dryer Heating Element', model: 'WE11M23', price: '$32.50', old: '$49.99', cat: 'appliances', icon: '🌀', tag: 'Appliances', delivery: 'Next-day' },
+            { id: 7, name: 'Phone Screen Replacement', model: 'IP14-LCD-OEM', price: '$49.99', old: '$79.99', cat: 'electronics', icon: '📱', tag: 'Electronics', delivery: '3-5 days' },
+            { id: 8, name: 'Laptop Battery Replacement', model: 'A1405-MBP13', price: '$67.00', old: '$99.99', cat: 'electronics', icon: '💻', tag: 'Electronics', delivery: '3-5 days' },
+            { id: 9, name: 'Vacuum Motor Filter', model: 'HEPA-DC25', price: '$9.99', old: '$15.99', cat: 'cleaning', icon: '🌀', tag: 'Cleaning', delivery: '2-3 days' },
+            { id: 10, name: 'Power Drill Carbon Brushes', model: 'CB-DW371', price: '$7.49', old: '$12.00', cat: 'tools', icon: '🔧', tag: 'Tools', delivery: 'Next-day' },
+            { id: 11, name: 'AC Capacitor 35+5 MFD', model: 'CAP-35-5-440V', price: '$15.99', old: '$24.00', cat: 'hvac', icon: '❄️', tag: 'HVAC', delivery: 'Next-day' },
+            { id: 12, name: 'Microwave Door Switch', model: 'WB24X829', price: '$6.49', old: '$11.99', cat: 'appliances', icon: '📡', tag: 'Appliances', delivery: '2-3 days' },
+        ];
+
+        let activeFilter = 'all';
+        let searchTerm = '';
+
+        function renderParts() {
+            const grid = document.getElementById('partsGrid');
+            const filtered = partsData.filter(p =>
+                (activeFilter === 'all' || p.cat === activeFilter) &&
+                (!searchTerm || p.name.toLowerCase().includes(searchTerm) || p.model.toLowerCase().includes(searchTerm))
+            );
+            if (!filtered.length) {
+                grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted)">
+                  <div style="font-size:3rem;margin-bottom:12px">🔍</div>
+                  <p style="font-size:1.05rem;font-weight:600;color:var(--text-secondary);margin-bottom:8px">No parts found</p>
+                  <p>Try another search or <a href="index.html#analyze" style="color:var(--primary)">use AI to find your part</a>.</p>
+                </div>`;
+                return;
+            }
+            grid.innerHTML = filtered.map(p => `
+              <div class="part-card">
+                <a href="product-detail.html?id=${p.id}" style="text-decoration:none;color:inherit;display:block">
+                  <div class="part-img" style="cursor:pointer">
+                    <span class="part-img-icon">${p.icon}</span>
+                    <span class="part-cat-badge">${p.tag}</span>
+                  </div>
+                </a>
+                <div class="part-body">
+                  <a href="product-detail.html?id=${p.id}" style="text-decoration:none;color:inherit">
+                    <div class="part-name">${p.name}</div>
+                  </a>
+                  <div class="part-model">Model: ${p.model} · ${p.delivery} delivery</div>
+                  <div class="part-price">${p.price}</div>
+                  <div class="part-actions">
+                    <button class="part-btn-cart" onclick="addToCart(event, ${p.id})">Add to Cart</button>
+                    <button class="part-btn-save" title="View Details" onclick="window.location.href='product-detail.html?id=${p.id}'">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `).join('');
+        }
+
+        function filterCat(btn, cat) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilter = cat;
+            renderParts();
+        }
+
+        function filterParts(val) {
+            searchTerm = val.toLowerCase().trim();
+            renderParts();
+        }
+
+        function addToCart(event, id) {
+            const p = partsData.find(x => x.id === id);
+            if (!p) return;
+            const cart = JSON.parse(localStorage.getItem('bnb_cart') || '[]');
+            const existing = cart.find(i => i.id === id);
+            if (existing) { existing.qty += 1; } else { cart.push({ ...p, qty: 1 }); }
+            localStorage.setItem('bnb_cart', JSON.stringify(cart));
+            // Update all cart badges
+            const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+            document.querySelectorAll('.cart-badge').forEach(b => b.textContent = totalQty);
+            // Flash button
+            const btn = event.target;
+            const orig = btn.textContent;
+            btn.textContent = '✓ Added!';
+            btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+            setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1800);
+        }
+
+        // Update cart badge from localStorage on page load
+        (function () {
+            const cart = JSON.parse(localStorage.getItem('bnb_cart') || '[]');
+            const total = cart.reduce((s, i) => s + i.qty, 0);
+            if (total > 0) document.querySelectorAll('.cart-badge').forEach(b => b.textContent = total);
+        })();
+
+        renderParts();
+    </script>
+</body>
+
+</html>
